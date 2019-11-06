@@ -1,0 +1,24 @@
+obj PROPC is
+  sort Prop .
+  protecting TRUTH + QID .
+  subsorts Id Bool < Prop .
+
+  op _and_ : Prop Prop -> Prop [assoc comm prec 2] .
+  op _xor_ : Prop Prop -> Prop [assoc comm prec 3] .
+  vars p q r : Prop .
+  eq p and false = false .
+  eq p and true = p .
+  eq p and p = p .
+  eq p xor false = p .
+  eq p xor p = false .
+  eq p and (q xor r) = (p and q) xor (p and r) .
+
+  op _or_ : Prop Prop -> Prop [assoc comm prec 7] .
+  op not_ : Prop -> Prop [prec 1] .
+  op _implies_ : Prop Prop -> Prop [prec 9] .
+  op _iff_ : Prop Prop -> Prop [assoc prec 11] .
+  eq p or q = (p and q) xor p xor q .
+  eq not p = p xor true .
+  eq p implies q = (p and q) xor p xor true .
+  eq p iff q = p xor q xor true .
+endo

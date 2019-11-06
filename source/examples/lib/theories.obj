@@ -1,0 +1,34 @@
+th TRIV* is
+  sort Elt .
+  op * : -> Elt .
+endth
+
+th PREORD is
+  sort Elt .
+  op _<=_ : Elt Elt -> Bool .
+  vars E1 E2 E3 : Elt .
+  eq E1 <= E1 = true .
+  cq E1 <= E3 = true if E1 <= E2 and E2 <= E3 .
+endth
+
+th POSET is
+  sort Elt .
+  op _<_ : Elt Elt -> Bool .
+  vars E1 E2 E3 : Elt .
+  eq E1 < E1 = false .
+  cq E1 < E3 = true if E1 < E2 and E2 < E3 .
+endth
+
+th EQV is
+  sort Elt .
+  op _eq_ : Elt Elt -> Bool [comm].
+  vars E1 E2 E3 : Elt .
+  eq (E1 eq E1) = true .
+  cq (E1 eq E3) = true if (E1 eq E2) and (E2 eq E3) .
+endth
+
+th MONOID is
+  sort M .
+  op e : -> M .
+  op _*_ : M M -> M [assoc id: e] .
+endth

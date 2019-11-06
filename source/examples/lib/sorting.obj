@@ -1,0 +1,20 @@
+in list2
+
+th POSET is
+  sort Elt .
+  op _<_ : Elt Elt -> Bool .
+  vars E1 E2 E3 : Elt .
+  eq E1 < E1 = false .
+  cq E1 < E3 = true if E1 < E2 and E2 < E3 .
+endth
+
+obj SORTING[X :: POSET] is    
+  protecting LIST[X] .        
+  op sorting_ : List -> List .
+  op unsorted_ : List -> Bool .
+  vars L L' L'' : List .
+  vars E E' : Elt .
+  cq sorting L = L if unsorted L =/= true .
+  cq sorting L E L' E' L'' = sorting L E' L' E L'' if E' < E .
+  cq unsorted L E L' E' L'' = true if E' < E .
+endo

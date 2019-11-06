@@ -1,0 +1,17 @@
+th INJ is
+  sorts A B .
+  op f_ : A -> B .
+  op g_ : B -> A .
+  var A : A . vars B B' : B .
+  [lnv] eq g f A = A .
+  [inj] cq B = B' if g B == g B' .
+endth
+
+open .
+op b : -> B .
+
+start f g b .
+apply .inj with B' = b at that .
+apply red at that .
+***> should be: b
+close

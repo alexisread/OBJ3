@@ -1,0 +1,14 @@
+in map
+
+obj FNS is
+  protecting INT .
+  ops (sq_) (dbl_) (_*3) : Int -> Int .
+  var N : Int .
+  eq sq N = N * N .
+  eq dbl N = N + N .
+  eq N *3 = N * 3 .
+endo
+
+reduce in MAP[(sq_).FNS] : map(0 nil 1 -2 3) .  ***> should be: 0 1 4 9
+reduce in MAP[(dbl_).FNS] : map(0 1 -2 3) .     ***> should be: 0 2 -4 6
+reduce in MAP[(_*3).FNS] : map(0 1 -2 nil 3) .  ***> should be: 0 3 -6 9

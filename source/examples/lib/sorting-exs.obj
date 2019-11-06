@@ -1,0 +1,21 @@
+in lexl
+in sorting
+
+view NATD from POSET to NAT is
+  vars L1 L2 : Elt .
+  op L1 < L2 to L1 divides L2 and L1 =/= L2 .
+endv
+
+reduce in SORTING[NATD] : sorting(18 5 6 3) . ***> should contain: 3 6 18
+reduce sorting(8 5 4 2) .                           ***> should contain: 2 4 8
+reduce sorting(6 3 1) .                      ***> should be: 1 3 6
+
+reduce in SORTING[INT] : unsorted 1 2 3 4 .  ***> should not be: true
+reduce unsorted 4 1 2 3 .                    ***> should be: true
+reduce sorting 1 4 2 3 .                     ***> should be: 1 2 3 4
+
+make SORTING-PH-LIST is SORTING[LEXL[QIDL]*(op __ to _._)] endm
+reduce sorting (('b . 'a)('a . 'a)('a . 'b)) .
+***> should be: ('a . 'a)('a . 'b)('b . 'a)
+
+reduce in SORTING[NATD] : sorting(18 6 5 3 1) . ***> should contain: 1 3 6 18

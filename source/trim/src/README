@@ -1,0 +1,56 @@
+This directory contains the implementation of the three
+components of TRIM: compiler, optimizer, assembler.
+In addition it contains a driver (trimcc) which coordinates
+the different components during a compilation.
+
+To build these components:
+* edit the 'BUILD_TARGET' macro in the Makefile to point to an 
+  appropriate bin directory.
+* edit 'BUILD_TARGET' macro in 'config.h' to point to the same 
+  bin directory as above.
+* make sure that the above bin directory is in your PATH.
+* run make
+
+These files contain utilities shared by all components:
+basics.cxx
+basics.hxx
+config.hxx
+const.hxx
+fileio.c
+fileio.h
+util.hxx
+mem.cxx
+
+Assembler implementation:
+asm.hxx
+asmlists.cxx
+asmlists.hxx
+trimasm.cxx
+trimgram.y
+trimscan.l
+
+The equation compiler:
+eqcomp.cxx
+eqcomp.hxx
+eqgram.y
+eqscan.l
+
+The optimizer:
+opt.cxx
+opt.hxx
+trimopt.cxx
+(this component also uses files from the assembler)
+
+The trim abstract machine implementation:
+trim.cxx
+trim.hxx
+trim_instr.imp
+trimmain.cxx
+
+The driver:
+config.h
+obstack.c
+obstack.h
+trimcc.c
+trimcc.h
+

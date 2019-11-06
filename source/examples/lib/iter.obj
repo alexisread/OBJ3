@@ -1,0 +1,16 @@
+in list
+
+th MONOID is
+  sort M .
+  op e : -> M .
+  op _*_ : M M -> M [assoc id: e] .
+endth
+
+obj ITER[M :: MONOID] is
+  protecting LIST[M] .
+  op iter : List -> M .
+  var X : M .
+  var L : List .
+  eq iter(nil) = e .
+  eq iter(X L) = X * iter(L) .
+endo

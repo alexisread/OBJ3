@@ -1,0 +1,37 @@
+in theories
+
+view NATG from POSET to NAT is
+  sort Elt to Nat .
+  op _<_ to _>_ .
+endv
+
+view NATLEQ from PREORD to NAT is
+  vars L1 L2 : Elt .
+  op L1 <= L2 to L1 < L2 or L1 == L2 .
+endv
+
+view NATD from POSET to NAT is
+  vars L1 L2 : Elt .
+  op L1 < L2 to L1 divides L2 and L1 =/= L2 .
+endv
+
+view NATV from POSET to NAT is
+  sort Elt to Nat .
+  op _<_ to _<_ .
+endv
+
+view NAT* from MONOID to NAT is
+  sort M to Nat .
+  op _*_ to _*_ .
+  op e to 1 .
+ endv
+
+view NAT+ from MONOID to NAT is
+  op _*_ to _+_ .
+  op e to 0 .
+endv
+
+view LISTM from MONOID to LIST is
+  op _*_ to __ .
+  op e to nil .
+endv

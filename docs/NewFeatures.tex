@@ -1,0 +1,1117 @@
+\documentstyle[alltt]{article}
+
+% calculation of strategies is a bit different
+% change in pattern matching -- visible affect on rules
+
+% Original document by Timothy Winkler.
+% Edits by Joseph Kiniry.  Feb, 2000
+
+%commands for extended BNF
+\newcommand{\nt}[1]{\mbox{$\langle\!\!\!$ {\it {#1}} $\!\!\rangle$}}
+\newcommand{\alt}{$\mid$}
+\newcommand{\lopt}{$[$}
+\newcommand{\ropt}{$]$}
+\newcommand{\lsg}{\{}
+\newcommand{\rsg}{\}}
+\newcommand{\itr}{$\ldots$}
+\newcommand{\itd}{$\ldots$}
+\newcommand{\omt}{$\ldots\ldots\ldots$}
+
+\newcommand{\noi}{\noindent}
+
+%\def\baselinestretch{2}
+\def\newblock{}
+
+%for imagen
+\setlength{\oddsidemargin}{-.15in}
+\setlength{\textwidth}{6in} %7
+\setlength{\textheight}{8.5in} %10
+%\setlength{\topmargin}{-.3in} %0
+\setlength{\headsep}{-.5in}
+
+%for the laser writer
+%\setlength{\oddsidemargin}{-.2in}
+%\setlength{\textwidth}{6.6in}
+%\setlength{\textheight}{9in}
+%\setlength{\headsep}{-.6in}
+
+%also for the laser writer
+\setlength{\oddsidemargin}{.2in}
+\setlength{\textwidth}{6in} %7
+\setlength{\textheight}{8.5in} %10
+\setlength{\topmargin}{-.05in} %0
+\setlength{\headsep}{-.05in}
+
+% like alltt but can be used within a sentence
+\makeatletter
+%\def\ttall{\hspace{-.45em}\tt\catcode``=13
+%\@noligs\let\do\@makeother\docspecials\frenchspacing\@vobeyspaces}
+% The above \ttall doesn't work in a latex2e system, thus I have
+% commented it out and have just done a standard \tt in the text
+% instead for now. J. Kiniry (kiniry@acm.org) Feb 13, 2000
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\bibliographystyle{plain}
+
+\title{\vspace{-.75in}Introducing OBJ3's New Features}
+
+\author{Timothy Winkler\footnote{This documented was edited for
+    clarity by Joseph Kiniry to be included with the 2.05 release of
+    OBJ3 (Feb, 2000).  Any errors herein are his alone.  Please
+    provide feedback to {\tt obj3-feedback@kindsoftware.com}.}}
+
+\maketitle
+
+\begin{quotation} \noindent {\bf Abstract:}
+  Some new features have been added to OBJ3 (as of the 2.0 release).
+  The syntax and usage of these new features are briefly described in
+  this document.
+\end{quotation}
+
+\section{Introduction}
+This is a brief introduction to some of the newer features of OBJ3
+added since Release 1.0.  This introduction is written assuming that
+you have access to {\em Introducing OBJ3} by Goguen and
+Winkler~\cite{iobj3}.  Two major goals of the new features are (a)
+easy extension of modules and (b) the controlled application of rules.
+This last allows the use of OBJ3 as a basis for very flexible
+equational reasoning.
+
+Descriptions of syntax here use the conventions of the {\em
+  Introducing OBJ3} report.  See also the beginning of the Syntax
+section, \ref{Syntax}, where they are summarized.
+
+\section{Descriptions}
+The following sections give brief discussions of the syntax and usage
+of the new features.  The syntax is also more formally presented in
+section \ref{Syntax}.
+
+\subsection{Verbose mode}
+The option {\tt verbose} controls how verbose various kinds of output
+will be.  In verbose mode, detailed information will be given on sorts
+and the handling of automatically created {\tt id} (identity) rules
+and conditions.
+
+\subsection{Treatment of Theories}
+Theories are now treated in nearly the same fashion as objects.  It is
+possible to do reductions in a theory, though warnings will be issued
+for reductions using terms with free variables.  See
+Section~\ref{var-reductions} for more information.  The main remaining
+difference between objects and theories is that built-in equations are
+not allowed in theories.  For more information on built-ins,
+see~\cite{bi}.
+
+\subsection{Including}
+There is a new mode of module incorporation called {\tt including}.
+\begin{alltt}
+        including \nt{ModExp} .
+        inc \nt{ModExp} .
+\end{alltt}
+The second form is an abbreviated version of the first.  {\tt
+  Including} is like {\tt using} in that no preservation of the
+structure of the included module is implied.  On the other hand, in
+the implementation it is treated as incorporation without copying and
+so is similar to {\tt protecting}.  If a module is {\tt included}
+twice in a given context, only one version of it is created and all
+references are all to the same shared instance.
+
+\subsection{Principal Sort}
+The sort that should be the principal sort of a module can be
+explicitly specified by
+\begin{alltt}
+        principal-sort \nt{Sort} .
+        psort \nt{Sort} .
+\end{alltt}
+The second form is an abbreviated version of the first.  Note that
+this doesn't create a sort, it just specifies that an existing sort
+should be taken as the principal sort of the module being defined.
+Usually this is not needed, as the default choice of principal sort is
+correct.  This operator is typically necessary if the principal sort
+is to come from a parameter theory.  Recall that the notion of a
+principal sort plays an important role in default view computations,
+i.e. in abbreviated parameterized module instantiation a la {\tt
+  make}.
+
+\subsection{Vars-of and Show Vars}
+A new way of introducing variables into a module has been defined.
+You can now ask that new copies of all the variables of another object
+be introduced into the current object.  These variables will maintain
+their name and sort.
+\begin{alltt}
+        vars-of \lopt \nt{ModExp} \ropt .
+\end{alltt}
+\noi Note: the set of variables considered to be in a module is not
+necessary cumulative.  In particular, it may be somewhat smaller that
+you would expect.
+
+Often it is the case that the module that introduces a sort also
+establishes a convention for naming variables of that sort, as well as
+introducing several variables of that sort.  This new feature makes it
+easy to maintain the convention and reuse the variable names.  This
+feature can also be used to make the variables of a re-opened module
+available for use (see later discussion).  As usual, if the
+\nt{ModExp} is omitted, the last module is used, but this is only
+really useful for such a re-opened module.
+
+The variables of a module can be seen by using the command
+\begin{alltt}
+        show vars \lopt \nt{ModExp} \ropt .
+\end{alltt}
+
+\subsection{Let}
+A shorthand notation for defining a name for a term has been
+introduced.
+\begin{alltt}
+        let \nt{Sym} = \nt{Term} .
+        let \nt{Sym} : \nt{Sort} = \nt{Term} .
+\end{alltt}
+The name used is restricted to be a single simple symbol (such as
+``x'', ``@2'', or ``ThePoint'').  The second form above is equivalent
+to
+\begin{alltt}
+        op \nt{Sym} : -> \nt{Sort} .
+        eq \nt{Sym} = \nt{Term} .
+\end{alltt}
+In the first form, the sort of the operator is taken to be the sort of
+the term as discovered by parsing.  When the defined symbol is used in
+expressions, it will be replaced by its definition, and so the symbol
+essentially stands for the value of the term.  Note that, a
+consequence of this form is that each time the symbol is used, the
+term will be reduced once again.
+
+There is a special case of let
+\begin{alltt}
+        let \nt{Sym} {\lopt}: \nt{Sort} \ropt = .
+\end{alltt}
+\noi This introduces a name for the current term which is last
+reduction result or the current state of the last {\tt start}-ed term.
+See Section~\ref{start} for more information on {\tt start}.
+
+\subsection{Show Principal Sort}
+The commands
+\begin{alltt}
+        show principal-sort \lopt \nt{ModExp} \ropt .
+\end{alltt}
+and
+\begin{alltt}
+        show psort  \lopt \nt{ModExp} \ropt .
+\end{alltt}
+will display the principal sort of a given module, or the current
+module if none is specified.
+
+\subsection{Comments}
+If the first non-blank character after ``{\tt ***}'' is a `{\tt (}',
+then the comment extends from that character up to the next balancing
+`{\tt )}'.  This block-comment form make it easy to comment out many
+lines at once.  It is possible that comments written for the old
+convention may now get the wrong treatment.  Examples of comments of
+this form are
+\begin{alltt}
+        *** (
+          eq X * 0 = 0 .
+        )
+        *** (This is an interesting equation: )  eq X + X = X .
+\end{alltt}
+Note that the comment in the second case only extends over only part
+of a line.  The equation is not part of the comment.  This case in
+particular might cause trouble for existing comments.  Standard style
+comments can be nested inside of multi-line comments, as long as a
+``{\tt ***)}'' doesn't accidentally appear within a line.\footnote{This
+multi-line comment style has semantics similar to the verbatim
+environment in \LaTeX.}
+
+\subsection{The Last Module}
+
+The module name {\tt THE-LAST-MODULE} will evaluate to the last module
+created or the current module being examined.
+
+\subsection{Openr, Open, and Close}
+It is possible to add terms to a module after it has been terminated
+by {\tt endo} or {\tt endth}.
+
+If the module has been incorporated into some other module, either
+directly (e.g., {\tt protecting mod}) or indirectly (by appearing in a
+module expression), then, after terms has added to the first module,
+the other module will no longer be valid and should no longer be
+used.
+
+One particular goal of this new feature is to allow reductions in a
+partially defined object.
+
+When it is desired to add more terms to a module, it is opened using
+\begin{alltt}
+        openr \nt{ModExp} .
+\end{alltt}
+or
+\begin{alltt}
+        openr .
+\end{alltt}
+The second form, as usual, opens the last module defined/used.
+Elements can be added to the open module using exactly the same syntax
+as is used to introduce them in the normal way in a module.  All other
+commands ({\tt in}, {\tt set}, {\tt show}, {\tt select}, and {\tt do})
+continue work as usual.  Normally a module that is opened should
+eventually be closed via
+\begin{alltt}
+        close
+\end{alltt}
+The system separately keeps track of a ``last'' modules and of an
+``open'' module.  Thus it is possible to show the module {\tt INT}
+while the module {\tt LIST} is open (making {\tt INT} the ``last''
+module), but still add elements to {\tt LIST}.  Additions of elements
+always go into the ``open'' module.
+
+After a module is re-opened, the variables of that module are not
+available, but they can be made available by the previously discussed
+{\tt vars-of} operator, specifically one of the form
+\begin{alltt}
+        vars-of .
+\end{alltt}
+
+There is an alternate version of {\tt openr} called {\tt open} which
+creates a hidden object (called ``\%'') and includes the given object.
+When the open object is closed in this case, the hidden object ``\%''
+is deleted.  This allows the easy creation of an object that
+temporarily has more structure than the given object.  The name {\tt
+  openr} was chosen to suggest ``open retentive.''  Note: If you {\tt
+  show} the open module, it will pretend to have the name of the
+underlying module with a marker (e.g. ``{\tt *** open}'') to remind
+you of this fact.
+
+\subsection{Select}
+A more natural way of selecting a module as the ``last'' module has
+been added.  One may use
+\begin{alltt}
+        select \lopt \nt{ModExp}  \ropt .
+        select open .
+\end{alltt}
+The second form makes the ``open'' module the ``last'' module (i.e.,
+the default for {\tt show} commands, etc.)  ``{\tt open}'' can be used
+as a short name for the ``open'' module in any of the {\tt show}
+commands.  The old command form {\tt show select \nt{ModExp}} has been
+retained.
+
+\subsection{Quietly Evaluate Lisp Forms}
+The command
+\begin{alltt}
+        eval-quiet \nt{LISP}
+\end{alltt}
+can be used to evaluate a LISP form with the minimum of output during
+the processing of definitions.  This can be abbreviated to {\tt evq}.
+
+\subsection{Show rules}
+The commands for controlled application of rules require that you
+specify rules by number.  The command
+\begin{alltt}
+        show rules \lopt \nt{ModExp} \ropt .
+\end{alltt}
+\noi shows a numbered list of rules of the module (defaulting to the
+``last'' module) suitable for use in specifying a rule in an {\tt
+  apply} command.  See the Section~\ref{Apply} for more information.
+The variant {\tt show all rules .}  will show all the rules in {\tt
+  verbose} and {\tt all rules} modes.
+
+There is a new option {\tt all rules} which can be use to control the
+comprehensiveness of rule display with the {\tt show} command.  By
+default, rules not in the current module and in certain pre-defined
+modules are excluded.  The command
+\begin{alltt}
+        set all rules on .
+\end{alltt}
+will make the set of rules more comprehensive.
+
+\subsection{Labeled Rules}
+A label can now be specified for a rule.  The syntax for labels is:
+\begin{alltt}
+        [ \nt{LabelList} ] \nt{Rule}
+\end{alltt}
+A \nt{LabelList} is a comma separated list of lists of identifiers.
+Identifiers must not contain a ``{\tt .}'', or begin with a digit.  
+
+The label need not immediately precede the rule.  The form {\tt
+  [label]} can be thought of a setting the label for the next rule
+that is created.  Example:
+\begin{alltt}
+        [def1] let x = 100 .
+\end{alltt}
+will work as expected. I.e., the label ``{\tt def1}'' will be
+associated with the rule ``{\tt x = 100}'' that is generated
+internally by the use of {\tt let} operation.
+
+Labels are shown when rules are displayed, and can likewise be used
+when rules are specified.  Automatically generated rules (retractions,
+effects of parameterized instantiation, etc.) have automatically
+generated names.
+
+\subsection{Show a Rule}
+The command
+\begin{alltt}
+        show rule \nt{RuleSpec} .
+\end{alltt}
+will show the selected rule.  The variant {\tt show all rule
+  \nt{RuleSpec} .} will show a specific rule in {\tt verbose} mode.
+
+\subsection{Show Modules}
+The command
+\begin{alltt}
+        show modules .
+\end{alltt}
+shows a list of all currently defined modules.
+
+If a module is redefined and is a simple-named module, then it may
+appear in the output from this command more than once.
+
+\subsection{Show Abbreviation for Module}
+One can see the abbreviation for a module's name by using
+\begin{alltt}
+        show abbrev \lopt \nt{ModExp}  \ropt .
+\end{alltt}
+Abbreviations are {\em aliases} for modules that can be used in many
+top-level commands.  The are of the form {\tt M}\nt{number}.  These
+are just considered abbreviations, and are not really considered part
+of the syntax of the language and are thus implementation-dependent.
+
+\subsection {Showing Module in Detail}
+The command
+\begin{alltt}
+        show all \lopt \nt{ModExp} \ropt .
+\end{alltt}
+will show a module in a more detailed form (more similar to original
+release of OBJ3).  The default display is been changed to be somewhat
+closer to the form that of the definition of the module.  The option
+{\tt verbose} controls whether objects are displayed in detailed form
+by default.
+
+\subsection{Changes to the Standard Prelude}
+
+A new object IDENTICAL has been created that can be used in place of
+BOOL and provides two new operators {\tt ===} and {\tt =/==}.  These
+check for syntactic equality of terms without evaluation or
+consideration of operator attributes.
+
+The operator {\tt \_==\_} has been changed to be polymorphic.  This
+can help with parsing problems in case a condition is of the form E
+{\tt ==} C, where C is an ambiguous constant (there is more than one
+constant with the same name) and E is has a well-defined unique sort.
+
+The module THAT has been renamed to LAST-TERM, and the operator
+{\tt [that]} has been renamed to {\tt [term]}.
+
+The module RAT has been slightly changed so that the built-in constant
+values are printed like {\tt 1/2}, not {\tt 1 / 2}, and the same
+syntax ({\tt 1/2}) can be used for the input of these constants.
+(Previously, there was no syntax for the input of the constants.)
+
+The object BUILT-IN has be modified to allow the creation of built-in
+subterms of RHSs of rules.  The default syntax is ``{\tt built-in:}
+\nt{Lisp}'', where the Lisp expression is represents a function that
+takes one argument, which is a substitution, and produces two values,
+a term which is the intended instantiation for this subterm, and a
+success indicator.  In general, it will be necessary to deal with the
+incompatibility of the Sort Built-in with the sorts of other operators
+in the RHS.  Here is a sketch of a use of this feature:
+
+\begin{alltt}
+          op r : Universal -> A .
+          var X : A .
+          eq f(X) = X + r(built-in: (lambda (u) (create-term u))) .
+          eq r(X) = X .
+\end{alltt}
+Note that ``{\tt built-in:}'' is now a very special keyword, and
+cannot be used in any other context (this can be disabled by ``{\tt ev
+  (setq obj\_BUILT-IN\$keyword nil)}'').
+
+The object LISP has been added that provides a built-in Lisp sort.
+The default syntax is ``{\tt lisp:} \nt{Lisp}''.  This can be used to
+allow the use of string data with Lisp syntax for the strings.  The
+keyword that introduces the data (above ``{\tt lisp:}'') can be
+changed to be some other symbol by {\tt setq}-ing the variable {\tt
+  obj\_LISP\$keyword} to that other token (e.g. ``{\tt string:}'').
+Note that ``{\tt lisp:}'' is now a very special keyword, and cannot be
+used in any other context (this can be disabled by ``{\tt ev (setq
+  obj\_LISP\$keyword nil)}'').
+
+\subsection{Tracing of Rewriting}
+
+The options {\tt trace} and {\tt trace whole} are now independent and
+the format of the output has been made clearer in both cases.  (It was
+the case that if {\tt trace} was off, then the setting of {\tt trace
+  whole} was ignored.)
+
+\subsection{Files and Directories}
+
+The top-level command
+\begin{alltt}
+        cd \nt{Directory}
+\end{alltt}
+changes the current directory for the running instance of OBJ to be
+the given directory or the current user's home directory if the
+directory is omitted.  The command {\tt cd ~} can be used to change to
+one's home directory.
+
+The command {\tt cwd} reports the current working directory.
+
+The command
+\begin{alltt}
+        ls
+\end{alltt}
+lists the files in the current working directory.
+
+If a file name begins with ``{\tt ~/}'', then this will be expanded to
+the user's home directory in most contexts.
+
+(Note: these features are somewhat system dependent, and, because of
+portability problems, may not exist in all versions of OBJ.)
+
+\subsection{Command Line Arguments}
+
+In the AKCL version of OBJ3, there are some special command line
+arguments.  These are pairs of these forms
+\begin{alltt}
+    -in \nt{FileName}
+    -inq \nt{FileName}
+    -evq \nt{FileName}
+\end{alltt}
+The first two forms cause a file to be read in as OBJ3 starts up,
+either with a trace or quietly.  The last form will quietly load a
+Lisp file on startup.
+
+\subsection{Variables in Reductions}
+\label{var-reductions}
+
+Variables are now allowed (with a warning) in terms for reduction and
+many other contexts.  The variables are treated as constants of
+appropriate sorts.  This can be used to help find parsing problems
+since you can now provide subterms of a larger term to see if they
+parse and they may now contain variables.
+
+\subsection{Term and Show Term}
+The commands for the controlled reduction of a term operate by
+applying rules (or other actions) to a single term that is the focus
+of action.  This single term will be called ``term'' and can be seen
+by using the command
+\begin{alltt}
+        show term .
+\end{alltt}
+(Initially it has a special undefined value.)  This term is is also
+modified by term reductions (command {\tt red}) to be the final result
+of the reduction (this behavior is the same as in release 1.0).  (This
+command existed in release 1.0, but it's behavior is not exactly the
+same.)
+
+\subsection{Start}
+\label{start}
+One can start working on the controlled reduction of a term by giving
+that term in a {\tt start} command.
+\begin{alltt}
+        start \nt{Term} .
+\end{alltt}
+The term given becomes the new focus of action and can be seen by
+using the {\tt show term} command.  (To reiterate: this focus is also
+set by the {\tt red} command, and so is always the last reduction
+result or the current state of the last {\tt start}-ed term.)
+
+The {\tt start} command can be used to examine the parse of a given
+term.  After ``term'' has been set by {\tt start} one case use {\tt
+  show term} to see its structure (in detail with {\tt print with
+  parens} on).
+
+\subsection{Apply} \label{Apply}
+The apply command allows the selective application of rules (or other
+actions) at specified places in the current {\tt term}.  Furthermore,
+rules can be instantiated before they are applied.  The syntax is
+rather complex: An apply command involves an {\em action}, an optional
+{\em instantiation}, a {\em range}, and a {\em selected subterm}.
+These elements will be discussed in the following subsections.  A
+sketch of the syntax of the apply command is
+\begin{alltt}
+        apply {\em action} \lopt {\em instantiation} \ropt {\em range} {\em selection}
+\end{alltt}
+
+\subsubsection{Action}
+An action is either a request to print the subterm, to reduce the
+subterm, or to apply a selected rule (possibly reversed) to a subterm.
+\begin{alltt}
+        print
+        reduction
+        red
+        \nt{ModId}.\nt{Int}
+        -\nt{ModId}.\nt{Int}
+        \nt{ModId}.\nt{Id}
+        -\nt{ModId}.\nt{Id}
+\end{alltt}
+The last four forms request the \nt{Int}th rule of module \nt{ModId}
+or that rule with the given Id as one of its labels (as shown by a
+{\tt show rules} command), and that rule reversed.  The \nt{ModId}
+must be a simple named module.  This is a case where module name
+abbreviations are useful.  If a label is used and multiple rules have
+that label, then the intent (this is not yet implemented) is to have
+the of rules be used in place of a single rule.
+
+There are two special actions that allow the use of the implicit
+retract rules.
+\begin{alltt}
+        retr
+        -retr with sort \nt{Sort}
+\end{alltt}
+The first rule applies the retract rules at the given point.  These
+are rules of the form r:A$>$B(X:A) = X:A.  The second form allows the
+introduction of a retract using the reversal of this rule; the sort
+given corresponds to B in r:A$>$B(X:A) = X:A.
+
+\subsubsection{Instantiation}
+When rules are reversed there may be variables in the new RHS that
+don't appear in the LHS.  E.g.,
+\begin{alltt}
+        eq X * 0 = 0
+\end{alltt}
+reversed is
+\begin{alltt}
+        eq 0 = X * 0
+\end{alltt}
+In cases like this, it is logically necessary to specify a binding of
+the variable {\tt X} in order to be able to apply the rule reversed.
+It is natural to allow this instantiation in all cases (even for
+non-reversed rules).  Specifying an instantiation may make it possible
+to apply a rule without specifying a specific subterm (use {\tt
+  within} as the range, as discussed next).
+
+An instantiation is specified by giving a substitution that specifies
+the bindings of some variables as a list of equations separated by
+commas (after the rule specification and delimited by {\tt with}).
+\begin{alltt}
+        with \nt{Var} = \nt{Term} \lsg, \nt{Var} = \nt{Term}\rsg\itr
+\end{alltt}
+The variables bound must appear somewhere in the rule.
+
+If some variable appears in the RHS, but not the LHS, and no binding
+is given, no warning is given.  It is rather easy to notice that this
+has been done, since a variable will be introduced into the current
+{\tt term}.
+
+Instantiation is ignored if the action is to print or reduce.
+
+\subsubsection{Within or At}
+Reduction and printing are always for a whole subterm.  Applying a
+rule can have one of two ranges either it is applied exactly ``{\tt
+  at}'' the selected subterm (see the next subsection) or it is
+applied anywhere ``{\tt within}'' the selected subterm.  In this
+latter case, if it is applied at a given point, it won't be reapplied
+at that point or within the resulting subterm at that point.
+
+\subsubsection{Selection of Subterm}
+There are three basic kinds of selection: selection of an {\em
+  occurrence}, {\em subsequence} (for associative operators), or {\em
+  subset} (for associative commutative operators).  There are also
+compositions of these basic selectors and in any case the selection
+process starts with the current {\tt term}.
+
+Subterms and argument positions are numbered from 1.
+
+Selection of an occurrence looks like
+\begin{alltt}
+        (\nt{Int}\itr)
+\end{alltt}
+The selection process proceeds from the starting term by successively
+passing to the argument positions specified by the successive
+integers.  E.g., if the term is {\tt (a + (c * 2))}, then the
+occurrence {\tt (2 1)} selects the subterm {\tt c}.  The selector {\tt
+  ()} simply selects the whole subterm (it is a selector, but it
+doesn't cause a shift in focus).
+
+Selection of a subsequence has two forms
+\begin{alltt}
+        [ \nt{Int} .. \nt{Int} ]
+        [ \nt{Int} ]
+\end{alltt}
+Spaces are required around the ``{\tt ..}''.  Selecting {\tt [k]} is
+the same as selecting {\tt [k .. k]}.  This kind of selection is only
+appropriate for terms whose top operator is associative (or
+associative and commutative).  For such operators, a tree of terms
+formed with that operator is naturally viewed as the sequence of the
+terms at the leaves of this tree.  The form {\tt [ \nt{Int} ]}
+selections the \nt{Int}th subterm of this logical sequence.  (It
+doesn't form a sequence of length one, which isn't possible, in fact.)
+The form {\tt [ \nt{Int} .. \nt{Int} ]} forces the restructuring of
+the term so that the specified range of terms of the logical sequence
+are a proper subterm of the whole term and then selects that term as
+the next current subterm.  This means that a selection may change the
+exact structure of the term (so that a print request may affect the
+structure of the term).
+
+Selection of a subset of the terms has the form
+\begin{alltt}
+        \{ \nt{Int} \lopt, \nt{Int} \ropt\itr \}
+\end{alltt}
+(Here the ``{\tt \{\}}'' are not syntactic meta-notation, they just
+stand for corresponding characters.)  No spaces are required within
+this notation.  This kind of selection is only appropriate for terms
+with top operators that are associative and commutative.  If an
+\nt{Int} is repeated, these repetitions are ignored.  This selector
+forces the given subset of the logical sequence (or more properly
+``bag'') of terms that are under the top operator to be a proper
+subterm and selects that term as the next current subterm.  The order
+of the subterms in the ``{\tt \{\}}''s affects the order of appearance
+of these terms in the selected subterm.  For example, in INT, if the
+current term is (when fully parenthesized) ``{\tt (1 * (2 * (3 * (4 *
+  5))))}'', the command
+\begin{alltt}
+    apply print at {1,3,5} .
+\end{alltt}
+is performed, then the resulting structure term is
+``{\tt ((1 * (3 * 5)) * (2 * 4))}''.
+
+You can specify the top of ``term'' by either of the selectors
+\begin{alltt}
+        top
+        term
+\end{alltt}
+It only really makes sense to use these once and they can be omitted
+unless there is no other selector.  In fact, one could also use the
+selector {\tt ()}.
+
+\subsubsection{Composition of Selectors}
+You can form a composition of selectors by separating them by
+{\tt of}.  For example,
+\begin{alltt}
+        \{3,1,2\} of [4] of (2 3 1)
+        [2 .. 5] of (1 1) of term
+\end{alltt}
+The interpretation of such a composition is like functional
+composition, the selection on the right is done first, then the middle
+one on the result of that selection, and then, finally, the one on the
+left.  Note that this is the opposite of the order of interpretation
+of the elements of an occurrence (e.g., {\tt (2 1)}).
+
+\subsubsection{Apply command and examples}
+The form of an apply command is {\tt apply} followed (in order) by the
+action, possibly a substitution, {\tt within} or {\tt at}, and a
+composition of selectors.  The schema for the apply command is
+\begin{alltt}
+        apply \lsg reduction \alt red \alt print \alt retr \alt
+            -retr with sort \nt{Sort} \alt
+            \nt{RuleSpec} \lopt with \nt{VarId} = \nt{Term}{\lsg},
+                 \nt{VarId} = \nt{Term}\rsg\itd\ropt \rsg
+        \lsg within \alt at \rsg
+        \nt{Selector} \lsg of \nt{Selector} \rsg\itd
+\end{alltt}
+(Here ``{\tt \{\}}'' are being used for syntactic grouping.)  The
+resulting value of the current {\tt term} is always printed after an
+apply command is performed.  As stated before, when {\tt try reduce
+  conditions} is on, {\tt test}s are forced to return {\tt true} in
+rules that are explicitly applied.
+
+Here are some examples.
+\begin{alltt}
+        apply G.1 at term .
+        apply -G.1 at term .
+        apply -G.2 with X = a at term .
+        apply print at term .
+        apply reduction at (2 1) .
+        apply G.1 at () .
+        apply X.3 at \{2\} .
+        apply X.3 at \{3,1,2\} .
+        apply G.2 at [2 .. 4] .
+        apply G.1 at [2] .
+        apply X.1 at \{2,4\} of [4] of (2 2) .
+        apply X.1 at \{2,4\} of [4 .. 4] of (2 2) of top .
+\end{alltt}
+
+The command {\tt apply ? .} will display a summary of the usage
+of the apply command.
+
+\subsubsection{Conditional Rules}
+
+Allowing the controlled application of conditional rules requires, in
+general, that it be possible to shift the focus of reduction to the
+(instantiated) condition of a rule, thus allowing controlled
+application of rules to this condition.  This is done by maintaining a
+stack of pending actions and pushing the application of a rule on the
+stack if its LHS matches, but it has a condition that needs to be
+carefully evaluated.  When a condition reduces to ``{\tt true}'' the
+delayed application of a rule is completed, and focus shifts back to
+the resulting term.  If the condition instead reduces to ``{\tt
+  false}'', then application of the rule is skipped, but you still
+shift focus back to the previous term.
+
+In fact, it is possible to request that conditions of conditional
+equations be directly reduced.  The command
+\begin{alltt}
+        set reduce conditions on .
+\end{alltt}
+requests this treatment.  Naturally, the default behavior can then be
+reinstated by
+\begin{alltt}
+        set reduce conditions off .
+\end{alltt}
+(Either all nontrivial conditions are to be carefully evaluated, or
+none are.)  One reason that one might prefer that the condition be
+directly evaluated is that, if the top operator of the LHS has special
+pattern matching attributes, then when the rule is applied all
+possible matches are tested against the condition until a successful
+case is found.  On the other hand, with controlled application, only
+one match is attempted (an this is part of the reason that {\tt [2 ..
+  3]}, and the other forms, are needed).
+
+Here is a small example.  The object {\tt X} has the definition
+\begin{alltt}
+        obj X is
+          sort A .
+          pr QID .
+          subsort Id < A .
+          op f : A -> A .
+          var X : A .
+          cq f(X) = f(f(X)) if (f(X) == 'a) .
+          eq f('b) = 'a .
+        endo
+\end{alltt}
+Here is a sample output trace.
+\begin{alltt}
+        ==========================================
+        start f ( 'b ) .
+        ==========================================
+        apply X.1 at term .
+        shifting focus to condition
+        condition(1) Bool: f('b) == 'a
+        ==========================================
+        apply X.2 within term .
+        condition(1) Bool: 'a == 'a
+        ==========================================
+        apply red at term .
+        condition(1) Bool: true
+        condition is satisfied, applying rule
+        shifting focus back to previous context
+        result A: f(f('b))
+\end{alltt}        
+Note that when actions are pending, ``{\tt condition}'' is printed
+instead of ``{\tt result}'' and the number of conditions being reduced
+(the number of pending actions) is printed in parentheses.
+
+If you are evaluating a condition and want to force either success
+or failure you can use the following commands
+\begin{alltt}
+        start true .
+        start false .
+\end{alltt}
+For example, the above example could have continued from ``{\tt apply
+  X.1 at term}'' with
+\begin{alltt}
+        ==========================================
+        start false .
+        condition(1) Bool: false
+        condition is not satisfied, rule not applied
+        shifting focus back to previous context
+        result A: f('b)
+\end{alltt}
+Thus, you can use this to abandon reductions that you no longer wish
+to perform.  Use of ``{\tt start true .}'' can easily produce
+incorrect reduction results, i.e. that do not follow by order-sorted
+equational deduction.  If it is known that the condition being
+replaced is {\tt true}, then this is not an issue.  However, you
+cannot perform a controlled reduction in the middle of doing another
+one, and then continue the first reduction.  (A new {\tt start} causes
+the current state of the current term to be lost.)
+
+If you want to see a description of all the pending actions you can
+use the command
+\begin{alltt}
+        show pending .
+\end{alltt}
+Which prints the details about the terms, rules, conditions, and
+replacements that are all currently pending.  For example, the output
+of this command might look like
+\begin{alltt}
+        pending actions
+          1| in f('b)  at top
+           | rule cq f(X) = f(f(X)) if f(X) == 'a
+           | condition f('b) == 'a  replacement f(f('b))
+             2| in f('b) == 'a  at f('b)
+              | rule cq f(X) = f(f(X)) if f(X) == 'a
+              | condition f('b) == 'a  replacement f(f('b))
+                3| in f('b) == 'a  at f('b)
+                 | rule cq f(X) = f(f(X)) if f(X) == 'a
+                 | condition f('b) == 'a  replacement f(f('b))
+\end{alltt}
+
+If you use the range specification {\tt within} and the rule is
+conditional, only one (at most) application of the rule will be
+reduced in a controlled way.  You will be warned about this by a
+message like
+\begin{alltt}
+        applying rule only at first position found: f('b)
+\end{alltt}
+
+\subsection{Identity Attribute Rule Completion Process}
+
+The handling of pattern matching for operators with identities
+requires a (partial) identity rule completion process which may result
+in some automatically created rules and may also result in special
+``id conditions'' (that are normally not displayed).  The partial
+completion and the id condition generation will be called {\bf id
+  processing}.  The point is that rewriting modulo identity can often
+lead to non-termination problems.  The id processing done in OBJ3
+release 2.0 restricts the standard identity completion process to
+avoid simple cases of non-termination by adding id conditions to rules
+(so that obviously problematic instances are disallowed) and also by
+discarding rule instances whose lefthand sides are variables (because
+their implementation as rules is problematic); in addition, rules
+subsumed by other rules are omitted for the sake of efficiency.  Note:
+strategies of operators are not taken into account when testing for
+non-termination.  It is possible that a rule will be considered as
+non-terminating, when non-termination is actually avoided because of
+the evaluation strategies.  In {\tt verbose} mode, many details of
+this process are displayed.  When rules are displayed in a verbose way
+(either in {\tt verbose} mode, or with a {\tt show all command}), then
+the special id conditions will be displayed.  When a module is
+processed, in {\tt verbose} mode, some of the details of the
+completion process are shown, including rule instances that are
+generated and an indication of modifications to or additions of rules.
+The rules that have been automatically added by id processing will
+have automatically generated labels of the form ``compl\nt{NAT}''.  An
+alternative approach to avoiding non-termination is to make the
+problematic rules conditional so as to prevent the undesired
+rewriting.  The object IDENTICAL, provided in the standard prelude and
+used in this example, is BOOL with the addition of two operations
+\verb|_===_| and \verb|_=/==_| which test for syntactic equality and
+inequality, and are very useful hand-crafted identity conditions.
+
+For example, if the following module is processed in verbose mode,
+
+\begin{alltt}
+    obj TST is
+      sort A .
+      ops c d e 0 1 : -> A .
+      vars X Y : A .
+      op _+_ : A A -> A [assoc comm id: 0] .
+      eq X + Y = c .
+    jbo
+\end{alltt}
+
+the system will produce this output:
+
+\begin{alltt}
+    ==========================================
+    obj TST
+    Performing id processing for rules
+    For rule: eq X + Y = c
+      Generated valid rule instances:
+      eq X + Y = c
+      Generated invalid rule instances:
+      eq Y = c
+      eq X = c
+      Modified rule: eq X + Y = c if not (Y === 0 or X === 0)
+    Done with id processing for rules
+    ==========================================
+\end{alltt}
+
+\noi In this example no new rule is generated, but the given rule had
+a special ``id condition'' added, which is not always displayed.  A
+rule instance is invalid if the LHS is a variable (this is an
+implementation limitation), or if it would ``obviously'' cause
+non-termination, e.g. the LHS and RHS are the same term.
+
+\begin{alltt}
+    OBJ> show rule .1 .
+    rule 1 of the last module
+      eq X + Y = c
+    OBJ> show all rule .1 .
+    rule 1 of the last module
+      eq X + Y = c if not (Y === 0 or X === 0)
+    OBJ> 
+\end{alltt}
+
+For a somewhat more complicated example consider:
+
+\begin{alltt}
+    obj TST is
+      pr TRUTH-VALUE .
+      sort A .
+      op 0 : -> A .
+      op _+_ : A A -> A [assoc id: 0] .
+      op 1 : -> A .
+      op _*_ : A A -> A [assoc id: 1] .
+      op f : A -> A .
+      ops a b c d e f : -> A .
+      var X Y : A .
+      eq (X * Y) + f(X * Y) = f(X) .
+    endo
+\end{alltt}
+
+The {\tt verbose} output would be:
+
+\begin{alltt}
+    ==========================================
+    obj TST
+    Performing id processing for rules
+    For rule: eq (X * Y) + f(X * Y) = f(X)
+      Generated valid rule instances:
+      eq (X * Y) + f(X * Y) = f(X)
+      eq X + f(X) = f(X)
+      eq Y + f(Y) = f(1)
+      eq f(0) = f(1)
+      Generated invalid rule instances:
+      eq f(0) = f(0)
+      Added rule: [compl16] eq f(0) = f(1)
+      Added rule: [compl17] eq X + f(X) = f(X) if not X === 0
+      Modified rule: eq (X * Y) + f(X * Y) = f(X) if not (X === 0 and Y === 
+        1)
+    Done with id processing for rules
+    ==========================================
+\end{alltt}
+
+In this case, the rule {\tt compl16} was added because the top
+operator is {\tt f} not {\tt \_+\_}.  In the other case, rule {\tt
+  compl17}, the LHS of the rule is a strict generalization of the
+original LHS, i.e. the original rule LHS cannot match the new one
+({\tt X + f(X)}).  It might make sense to delete the original rule,
+but this is never done.  Note also that confluence is assumed, as
+always, and in this context this means confluence for all rule
+instances and for all ways of matching.  Here this means that it is
+valid not to add the rule {\tt eq Y + f(Y) = f(1)}.  (Of course, this
+is a very contrived example and the original system was not
+confluent.)
+
+\subsection{Help commands}
+The command {\tt ?} (note: no ``.'') produces the following output
+\begin{alltt}
+    Top-level definitional forms include: obj, theory, view, make
+    The top level commands include:
+      q; quit --- to exit from OBJ3
+      show .... .  --- for further help: show ? .
+      set .... . --- for further help: set ? .
+      do .... . --- for further help: do ? .
+      apply .....  --- for further help: apply ? .
+      other commands:
+        in <filename>
+        red <term> .
+        select <module-expression> .
+        cd <directory>; ls; pwd
+        start <term> .; show term .
+        open [<module-expression>] .; openr [<module-expression>] .; close
+        ev <lisp>; evq <lisp>
+\end{alltt}
+The ``;''s are only used to separate alternatives.
+
+\subsection{Problems}
+It is possible that the rules (as seen in a {\tt show rules} command)
+will be reordered is curious ways when modules are constructed.  There
+may be odd repetitions of rules in certain cases.
+
+\section{Syntax} \label{Syntax}
+This section gives the syntax of the new features of for OBJ3, using
+the an extended BNF notation as an extension of the presentation of
+the syntax of OBJ3 in \cite{iobj3}.  The symbols {\lsg} and {\rsg} are
+used as meta-parentheses; the symbol {\alt} is used to separate
+alternatives; {\lopt} {\ropt} pairs enclose optional syntax; {\itr}
+indicates 0 or more repetitions of preceding unit; and {\tt "x"}
+denotes {\tt x} literally.  As an application of this notation, {{\tt
+    A}{\lsg},{\tt A}\rsg\itr} is an idiom used for a non-empty list of
+{\tt A}s separated by commas.  {\tt \omt} is used to mark the omission
+of other alternatives which are described in \cite{iobj3}.  Finally,
+\verb|---| indicates comments in the syntactic description (as opposed
+to comments in OBJ3 code).
+
+\begin{alltt}
+--- modules ---
+
+  \nt{ModElt} ::= \omt \alt
+        \lsg using \alt extending \alt protecting \alt
+            including \rsg \nt{ModExp} . \alt
+        principal-sort \nt{Sort} . \alt
+        let \nt{Sym} \lopt : \nt{Sort} \ropt = \nt{Term} . \alt
+        let \nt{Sym} \lopt : \nt{Sort} \ropt = . \alt
+        vars-of \lopt \nt{ModExp} \ropt .
+
+  \nt{Sym} --- any operator syntax symbol (blank delimited)
+
+--- top-level ---
+
+  \nt{OBJ-input} ::= \lsg \omt \alt
+        \nt{RuleLabel}
+        openr \lopt \nt{ModExp} \ropt . \alt
+        open \lopt \nt{ModExp} \ropt . \alt
+        close \alt
+        start \nt{Term} . \alt
+        \nt{Apply}
+        \rsg\itr
+
+  \nt{RuleLabel} ::= [ \nt{Id}\itr{\lsg},\nt{Id}\itr\rsg\itd ]
+
+  \nt{Apply} ::=
+        apply \lsg reduction \alt red \alt print \alt retr \alt
+            -retr with sort \nt{Sort} \alt
+            \nt{RuleSpec} \lopt with \nt{VarId} = \nt{Term}{\lsg},
+                 \nt{VarId} = \nt{Term}\rsg\itd\ropt \rsg
+        \lsg within \alt at \rsg
+        \nt{Selector} \lsg of \nt{Selector} \rsg\itd
+
+  \nt{RuleSpec} ::= {\lopt}-\ropt\lopt\nt{ModId}\ropt.\nt{RuleId}
+
+  \nt{RuleId} ::= \nt{Natural Number} \alt \nt{Id}
+
+  \nt{Selector} ::= term \alt top \alt
+        (\nt{Int}\itr) \alt
+        "[" \nt{Int} \lopt .. \nt{Int} \ropt "]" \alt
+        "\{"\nt{Int}{\lsg},\nt{Int}\rsg\itr"\}"
+        --- note that "()" is a valid selector
+
+  \nt{Commands} --- show, set, do, select
+        in particular:
+            select \lopt \nt{ModExp} \ropt .
+            show {\lopt}all\ropt rules \lopt \nt{ModExp} \ropt .
+            show {\lopt}all\ropt rule \nt{RuleSpec} .
+            show vars .
+            show term .
+            select open .
+            set reduce conditions \nt{On/Off} .
+            set all rules \nt{On/Off}
+            show {\lopt}all\ropt rule \nt{RuleSpec}
+            eval-quiet \nt{LISP}
+            show abbrev \lopt \nt{ModExp} \ropt .
+            show modules .
+            show all {\lopt}\nt{ModExp}\ropt .
+            set verbose \nt{On/Off} .
+            show pending .
+        open --- can use this to refer to the open module in show commands
+
+  \nt{On/Off} ::= on \alt off
+
+  \nt{Comment} ::= *** \nt{Rest-of-line} \alt ***> \nt{Rest-of-line} \alt
+        *** ( \nt{Text-with-balanced-parentheses} )
+
+--- equivalent forms ---
+
+  inc = including
+  evq = eval-quiet
+  psort = principal-sort
+\end{alltt}
+
+\section{Last words}
+
+I would like to acknowledge many useful suggestions from Jos\'{e}
+Meseguer that helped improve these notes.  Good Luck!!!
+
+%\bibliography{/users/goguen/bib/tex,/users/goguen/bib/obj}
+\begin{thebibliography}{1}
+  
+\bibitem{iobj3} Joseph Goguen and Timothy Winkler.  \newblock
+  Introducing {OBJ3}.  \newblock Technical Report SRI-CSL-88-9, SRI
+  International, Computer Science Lab, August 1988.  \newblock Revised
+  version to appear with additional authors Jos\'e Meseguer, Kokichi
+  Futatsugi and Jean-Pierre Jouannaud, in {\em Applications of
+    Algebraic Specification using {OBJ}}, edited by Joseph Goguen,
+  Derek Coleman and Robin Gallimore, Cambridge, 1992.
+\bibitem{bi} Timothy Winkler and Jos\'e Meseguer. \newblock
+  {OBJ3}'s Built-ins. \newblock SRI International, Menlo Park, CA
+  94025.  \newblock Included with the OBJ3 2.05 software release.
+
+\end{thebibliography}
+
+\newpage
+\tableofcontents
+
+\end{document}

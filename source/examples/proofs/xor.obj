@@ -1,0 +1,87 @@
+in propc
+
+obj BEH is
+  extending PROPC .
+  ops i1 i2 p1 p2 p3 o : -> Prop .
+  eq p1 = not i1 .
+  eq o = i1 xor i2 .
+  eq p2 = true .
+  eq p3 = false .
+endo
+
+*** p1 = p2 if not i1 .
+obj BEH1 is
+  using BEH .
+  eq i1 = false .
+endo
+reduce p1 == p2 .
+
+*** p1 = p3 if i1 .
+obj BEH2 is
+  using BEH .
+  eq i1 = true .
+endo
+reduce p1 == p3 .
+
+*** o = i1 if not i2 .
+obj BEH3 is
+  using BEH .
+  eq i2 = false .
+endo
+reduce o == i1 .
+
+*** o = p1 if i2 .
+obj BEH4 is
+  using BEH .
+  eq i2 = true .
+endo
+reduce o == p1 .
+
+*** o = i2 if not i1 .
+obj BEH5 is
+  using BEH .
+  eq i1 = false .
+endo
+reduce o == i2 .
+
+*** o = i2 if p1 .
+obj BEH6 is
+  using BEH .
+  eq i1 = false .
+endo
+reduce o == i2 .
+
+obj BEH is
+  extending PROPC .
+  ops p1 p2 q : -> Prop .
+  eq p1 = not q .
+  eq p2 = q .
+endo
+
+*** p1 = true if not p2 .
+obj BEH1 is
+  using BEH .
+  eq q = false .
+endo
+reduce p1 == true .
+
+*** p1 = false if p2 .
+obj BEH2 is
+  using BEH .
+  eq q = true .
+endo
+reduce p1 == false .
+
+*** p2 = true if not p1 .
+obj BEH3 is
+  using BEH .
+  eq q = true .
+endo
+reduce p2 == true .
+
+*** p2 = false if p1 .
+obj BEH4 is
+  using BEH .
+  eq q = false .
+endo
+reduce p2 == false .

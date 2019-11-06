@@ -1,0 +1,15 @@
+obj ARRAY[INDEX VALUE :: TRIV] is
+  sort Array .
+  op nilArr : -> Array .
+  op put : Elt.INDEX Elt.VALUE Array -> Array .
+  op _[_] : Array Elt.INDEX -> Elt.VALUE .
+  op _in_ : Elt.INDEX Array -> Bool .
+  op undef : Elt.INDEX -> Elt.VALUE .  *** err-op
+  var A : Array .
+  var I I' : Elt.INDEX .   var E : Elt.VALUE .
+  eq put(I,E,A)[ I ] = E .
+  ceq put(I,E,A)[ I' ] = A [ I' ] if I =/= I' .
+  eq I in nilArr = false .
+  eq I in put(I',E,A) = I == I' or I in A .
+  ceq A [ I ] = undef(I) if not I in A .  *** err-eqn
+endo

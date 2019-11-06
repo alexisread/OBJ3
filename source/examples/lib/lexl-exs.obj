@@ -1,0 +1,10 @@
+in lexl
+in views
+
+make LEXL-NATG is LEXL[NATG] endm
+
+make NAT-LEXL is LEXL[NAT] endm
+
+make NATD-LEXL is LEXL[NATD] endm
+
+make PHRASE-LIST is LEXL[LEXL[QIDL]*(op __ to _._)] endm

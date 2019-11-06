@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- $Id: FAQ.html,v 206.3 2003/09/29 13:29:32 kiniry Exp $ -->
+
+<!--
+ OBJ3 2.06,2.08,2.09 Copyright (c) 2000-2003 Joseph Kiniry, Joseph Goguen
+ OBJ3 2.05 Copyright (c) 2000 Sula Ma, Joseph Kiniry, Joseph Goguen
+ OBJ3 2.04 Copyright (c) 1988,1991,1993 SRI International
+ TRIM Copyright (c) 1994,2001 Lutz Hamel
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>The OBJ3 Frequently Asked Questions List</title>
+<link rel="stylesheet" type="text/css" href="docs/base.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="OBJ3" />
+<meta name="description" content="" />
+</head>
+
+<body>
+<h1 align="center">The OBJ3 Frequently Asked Questions List</h1>
+
+<hr />
+<!-- ============================================================ -->
+
+<p> If you have any questions that you'd like added to this FAQ, please email
+your suggestions to <a href=
+"mailto:obj3-feedback@kindsoftware.com">obj3-feedback@kindsoftware.com</a>. Thanks!
+
+</p>
+
+<ol>
+
+  <li> <em>What is OBJ3?</em>
+
+      <p>From the <strong>OBJ3 release</strong>: </p>
+
+      <p>"<a href=
+      "http://www-cse.ucsd.edu/users/goguen/sys/obj.html">OBJ</a>" refers to
+      the language family, while "OBJ2", "<a href=
+      "http://www.kindsoftware.com/products/opensource/OBJ3/">OBJ3</a>", "<a
+      href= "http://cat.ucsd.edu:8008/cafeobj/">CafeOBJ</a>", "<a href=
+      "http://www-cse.ucsd.edu/groups/tatami/bobj/">BOBJ</a>" etc. refer to
+      particular members. The OBJ languages are broad spectrum algebraic
+      programming and specification languages, based on order sorted
+      equational logic, generally enriched with some other logic, such as
+      rewriting logic or hidden equational logic.  </p>
+
+      <p> All the OBJ languages are rigorously based upon a logical system;
+      more precisely, they are <em>logical languages</em>, in the sense that
+      their programs are sets of sentences in some logical system, and their
+      operational semantics is given by deduction in that logical system.
+      All recent OBJ languages use order sorted algebra, which also provides
+      a rigorous basis for user definable sub-types, exception handling,
+      multiple inheritance, overloading, multiple representations, coercions,
+      and more.  All recent OBJ languages provide parameterized programming,
+      with parameterized modules, module instantiation, views, module
+      expressions, etc., to support very flexible program structuring and
+      reuse.  In general, they also support user definable mixfix syntax,
+      user definable execution strategies, rewriting modulo standard
+      equational theories (associative, commutative, etc.), and selective
+      memoization. </p>
+      
+      <p> OBJ3 is based on order sorted equational logic, and has been
+      successfully used for research and teaching in software design and
+      specification, rapid prototyping, theorem proving, user interface
+      design, and hardware verification, among other things. It was the
+      first language to implement parameterized programming and its
+      module system influenced the designs of the Ada, C++ and ML module
+      systems. </p>
+  </li>
+
+  <li> <em>Where did the name "OBJ3" come from?</em> 
+
+      <p> OBJ3 is the third of a series of implementations of the same basic
+      ideas; "OBJ" is not an acronym, but rather is a contraction from
+      "object," since the intent from the beginning was to capture the ideas
+      that later turned out, by some strange coincidence, to be called "object
+      oriented."  </p>
+  </li>
+      
+  <li> <em>What is the OBJ3 license like?</em>
+
+      <p> OBJ3 was originally distributed from SRI International, and later
+      from Oxford, and then UCSD.  Originally a license from SRI was required
+      to obtain the OBJ3 source code, but this is no longer the case.  This
+      new version of OBJ3 (2.06 onward) is released under a BSD-like
+      license.  </p>
+  </li>
+
+  <li> <em>What is the history of OBJ3?</em>
+
+      <p>The first implementation of initial algebra semantics via term
+      rewriting appeared in the earliest versions of OBJ, from the mid 1970s.
+      The characteristic OBJ syntax first appeared in the paper <em>Abstract
+      Errors for Abstract Data Type</em>, by Joseph Goguen in 1977.  The idea
+      of using term rewriting to implement initial algebra semantics evolved
+      out of work done in the ADJ group in the early 1970s.  The OBJ module
+      system ideas are a further development of ideas pioneered in the Clear
+      language, in joint work of Joseph Goguen and Rod Burstall in the 1970s.
+      Most of the programming for OBJ3 was done by Timothy Winkler, first at
+      SRI International, and then later at Oxford; several small enhancements
+      and some bug fixes were later done by students at Oxford and UCSD, the
+      last of which appear in version 2.04.  Then, Joe Kiniry stepped
+      in and created a modern open source release, which began with version
+      2.05.  Lutz Hamel graciously integrated his TRIM system, resulting in
+      version 2.08.
+      </p>
+  </li>
+      
+  <li> <em>How do I get the source for OBJ3 or pre-built executables?</em>
+
+      <p> You can download the latest OBJ3 source code and executables via
+      the <a href=
+      "http://www.kindsoftware.com/products/opensource/OBJ3/">OBJ3 release
+      home page</a>, or one of its mirrors. </p>
+  </li>
+
+  <li> <em>Are previous versions of OBJ3 available?</em>
+
+      <p> A snapshot of OBJ3 version 2.04 is no longer publically
+      available.  Joseph Kiniry has a copy, so you can request it from him.
+      It includes a SPARC SunOS 4.x executable, but does not contain much
+      coherent documentation.
+      </p>
+  </li>
+      
+  <li> <em>How can I contribute?</em>
+      <ul>
+
+        <li>OBJ3 is not under active development at this time, though
+            a branch version, called OBJ4, might become available from
+            <a href= "mailto:sm@comlab.ox.ac.uk">Sula Ma</a> at
+            Oxford.  Please see the address below to submit bug
+            reports, patches, suggestions, etc. for this release.
+            Please do <em>not</em> email Sula. </li>
+
+        <li><a href=
+            "http://www-cse.ucsd.edu/groups/tatami/bobj/">BOBJ</a> is
+            now available from the <a href =
+            "http://www-cse.ucsd.edu/users/goguen/macl.html">Meaning
+            and Computation Lab</a> in the UCSD Dept. of Computer
+            Science and Engineering.  BOBJ is written in Java, thus
+            runs on numerous platforms.  Once a stable release has
+            been achieved, additional developers and maintainers would
+            be welcome.  This system should eventually be fully upward
+            compatible with OBJ3, with considerable additional support
+            for behavioral specification, computation, and
+            verification. </li>
+      </ul>
+  </li>
+
+  <li> <em>What tools are used to develop OBJ3?</em>
+
+      <p> This release of OBJ3 was built using GCL 2.5.3, CMU Common
+      Lisp 18e, CLISP 2.31, GCC 3.2, and FSF Emacs 21.3.50 on a Linux
+      2.4.21 (RedHat 8.0) system. </p> </li>
+
+  <li> <a name= "documentation"> <em>What is the primary documentation on
+      OBJ3?</em></a>
+
+      <p> We suggest you read the following documents, in order, to learn
+      more about OBJ3: </p>
+      <ul>
+        <li> <a href=
+        "http://www-cse.ucsd.edu/users/goguen/ps/iobj.ps.gz"><em>Introducing
+        OBJ</em></a> [<a href=
+        "docs/obj_bib.html#GoguenWinklerEtal00">GoguenWinklerEtal00</a>],
+        which is the OBJ3 manual, and is included in <a href=
+        "http://www.wkap.nl/book.htm/0-7923-7757-5"><b>Software Engineering
+        with OBJ: Algebraic Specification in Action</b></a> [<a href=
+        "docs/obj_bib.html#GoguenMalcolm00">GoguenMalcolm00</a>].  </li>
+
+        <li> <a href= "docs/NewFeatures.pdf">"Introducing OBJ3's New
+        Features"</a> [<a href=
+        "docs/obj_bib.html#Winkler-NewFeatures">Winkler-NewFeatures</a>], which
+        is also included in <a href=
+        "http://www-cse.ucsd.edu/users/goguen/ps/iobj.ps.gz"><em>Introducing
+        OBJ</em></a> [<a href=
+        "docs/obj_bib.html#GoguenWinklerEtal00">GoguenWinklerEtal00</a>], and
+        hence is included in <a href=
+        "http://www.wkap.nl/book.htm/0-7923-7757-5"><b>Software Engineering
+        with OBJ: Algebraic Specification in Action</b></a> [<a href=
+        "docs/obj_bib.html#GoguenMalcolm00">GoguenMalcolm00</a>].  </li>
+
+        <li> <a href=
+        "http://mitpress.mit.edu/book-home.tcl?isbn=026207172X"><b>Algebraic
+        Semantics of Imperative Programs</b></a> [<a href=
+        "docs/obj_bib.html#GoguenMalcolm96-ASoIP">GoguenMalcolm96-ASoIP</a>],
+        for an intuitive general treatment of the underlying semantics, with
+        many examples from programming languages.  </li>
+
+        <li> <a href= "http://www.wkap.nl/book.htm/0-7923-7757-5"><b>Software
+        Engineering with OBJ: Algebraic Specification in Action</b></a> [<a
+        href="docs/obj_bib.html#GoguenMalcolm00">GoguenMalcolm00</a>], which
+        includes the manual as well as many case studies using OBJ3, and
+        documentation for some advanced higher order module features.  </li>
+
+  </ul> And, for those interested in the extending OBJ3: <ul> 
+       
+       <li> <a href= "docs/Built-Ins.pdf">OBJ3's Built-ins</a> [<a href=
+       "docs/obj_bib.html#WinklerMeseguer-Builtins">WinklerMeseguer-Builtins</a>],
+       which is also included in <a href=
+       "http://www-cse.ucsd.edu/users/goguen/ps/iobj.ps.gz"><em>Introducing
+       OBJ</em></a> [<a href=
+       "docs/obj_bib.html#GoguenWinklerEtal00">GoguenWinklerEtal00</a>], and
+       hence is included in <a href=
+       "http://www.wkap.nl/book.htm/0-7923-7757-5"><b>Software Engineering
+       with OBJ: Algebraic Specification in Action</b></a> [<a href=
+       "docs/obj_bib.html#GoguenMalcolm00">GoguenMalcolm00</a>].  </li>
+
+       <li> Several systems built on top of OBJ3 extend the system in various
+           ways.  In particular, see papers in the <a href=
+           "docs/obj_bib.html">bibliography</a> discussing FOOPS, OOZE,
+           2OBJ, TRIM, and TOOR, some of which are available via the <a
+           href="http://www.kindsoftware.com/products/opensource/OBJ3/">OBJ3
+           release home page</a>.  The <a href=
+           "ftp://ftp.comlab.ox.ac.uk/pub/Packages/OBJ4/">OBJ4</a> release
+           might also give additional information on extending
+           OBJ3/4. </li>
+      </ul>
+
+      <p> <strong>Many</strong> other OBJ-related documents are
+      referenced in the included <a href= "docs/obj_bib.html">OBJ
+      bibliography</a>. </p> </li>
+
+  <li> <em>If I want to learn about (OBJ3 | rewriting systems | (Many) Order
+  Sorted Algebra | Hidden Algebra), where should I look?</em>
+
+      <p> The first place to look is Joseph Goguen's <a href=
+      "http://www-cse.ucsd.edu/users/goguen/sys/obj.html">OBJ home page</a>,
+      from which many other references can be found.  In particular,
+      see [<a href= "docs/obj_bib.html#Goguen78">Goguen78</a>, <a href=
+      "docs/obj_bib.html#GoguenDiaconescu94">GoguenDiaconescu94</a>, <a href=
+      "docs/obj_bib.html#GoguenMeseguer89">GoguenMeseguer89</a>] , and any of
+      the GoguenMalcolm papers on Hidden Algebra (particularly [<a href=
+      "docs/obj_bib.html#GoguenMalcolm97">GoguenMalcolm97</a>] for an
+      excellent though outdated review); the latest paper is <a href=
+      "http://www-cse.ucsd.edu/users/goguen/ps/ccrw.ps.gz"><em>Circular
+      Coinductive Rewriting</em></a>, by Joseph Goguen, Kai Lin and Grigore
+      Rosu.  </p>
+  </li>
+
+  <li> <em>Which Lisp interpreters can I use to build/use OBJ3?</em>
+
+      <p> Currently, GCL and CMU Common Lisp are supported.  OBJ3 has
+      been built successfully in the past with AKCL and Lucid CL as
+      well.  We are currently working on building OBJ3 on CLISP and
+      SBCL.  We would like to try building on Allegro CL as well, but
+      Allegro's policies and licensing prohibit such.  We suggest you
+      email Allegro and express your discontent with the current state
+      of affairs. </p>
+  </li>
+
+  <li> <em>What systems have been built on top of OBJ3?</em>
+
+      <p>A partial (alphabetical) list includes the following:
+      <ul>
+        <li> <a href=
+        "http://www-cse.ucsd.edu/users/goguen/sys/eqlog.html">Eqlog</a> - a
+        logic programming language, implemented by enriching OBJ3 with order
+        sorted unification and backtracking.  See [<a href=
+        "docs/obj_bib.html#GoguenMeseguer86">GoguenMeseguer86</a>, <a href=
+        "docs/obj_bib.html#GoguenMeseguer87-Eqlog">GoguenMeseguer87-Eqlog</a>,
+        <a href= "docs/obj_bib.html#Diaconescu94">Diaconescu94</a>, <a href=
+        "docs/obj_bib.html#Cirstea95">Cirstea95</a>].  </li>
+
+        <li> <a href=
+        "http://www-cse.ucsd.edu/users/goguen/sys/foops.html">FOOPS</a> - a
+        declarative object oriented language built on top of OBJ3.  See [<a
+        href=
+        "docs/obj_bib.html#GoguenMeseguer87-Foops">GoguenMeseguer87-Foops</a>,
+        <a href=
+        "docs/obj_bib.html#RapanottiSocorro92">RapanottiSocorro92</a>, <a
+        href= "docs/obj_bib.html#Borba95">Borba95</a>, <a href=
+        "docs/obj_bib.html#BorbaGoguen94a">BorbaGoguen94a</a>, <a href=
+        "docs/obj_bib.html#BorbaGoguen94b">BorbaGoguen94b</a>, <a href=
+        "docs/obj_bib.html#BorbaGoguen95">BorbaGoguen95</a>, <a href=
+        "docs/obj_bib.html#Cirstea95">Cirstea95</a>, <a href=
+        "docs/obj_bib.html#GoguenSocorro95">GoguenSocorro95</a>, <a href=
+        "docs/obj_bib.html#GoguenWolfram9">GoguenWolfram91</a>].  </li>
+
+        <li> <a href="http://www-cse.ucsd.edu/groups/tatami/kumo/">Kumo</a> -
+        a proof assistant for first order hidden logic, that also generates
+        websites that document its proofs.  See [<a href=
+        "docs/obj_bib.html#Goguen99a">Goguen99a</a>, <a href=
+        "docs/obj_bib.html#GoguenLinEtal98">GoguenLinEtal98</a>, <a href=
+        "docs/obj_bib.html#GoguenMoriLin97">GoguenMoriLin97</a>].  </li>
+
+        <li> OOZE - an object oriented version of Z built on top of FOOPS.
+        See [<a href=
+        "docs/obj_bib.html#AlencarGoguen91a">AlencarGoguen91a</a>, <a href=
+        "docs/obj_bib.html#AlencarGoguen91b">AlencarGoguen91b</a>, <a href=
+        "docs/obj_bib.html#AlencarGoguen92">AlencarGoguen92</a>].  </li>
+
+        <li> <a href=
+        "http://www-cse.ucsd.edu/users/goguen/sys/toor.html">TOOR</a> - a
+        requirements management system built on top of FOOPS.  See [<a href=
+        "docs/obj_bib.html#PinheiroGoguen96-TOO">PinheiroGoguen96-TOOR</a>].
+        </li>
+
+        <li> TRIM - an optimizing compiler for OBJ, proved correct using
+            hidden algebra.  See [<a href=
+            "docs/obj_bib.html#Hamel94">Hamel94</a>].  Beginning with OBJ3
+            version 2.xx, TRIM is now included in the distribution, thanks
+            to Lutz Hamel.
+        </li>
+
+        <li> <a href=
+            "http://www-cse.ucsd.edu/users/goguen/sys/2obj.html">2OBJ</a> -
+            a theorem prover (for any user definable logic) built using
+            OBJ3.  See
+            [<a href=
+            "docs/obj_bib.html#GoguenStevensEtal9">GoguenStevensEtal92</a>].
+        </li>
+
+        <li> KTT - a logic for capturing reusable knowledge.  A model
+            for the KTT logic was originally implemented in OBJ3.
+        </li>
+      </ul>
+      </p>
+      
+      <p> Joseph Kiniry is compiling several of these packages
+      into a new, supported software release.  </p>
+  </li>
+
+  <li> <em>What systems/models/theories have been influenced by
+      OBJ?</em>
+      
+      <p>A partial list includes the following:
+      <ul>
+        <li> <a href= "http://cat.ucsd.edu:8008/cafeobj/">CafeOBJ</a> -
+        CafeOBJ is a new generation algebraic specification language being
+        developed in Japan with support from MITI through <a href=
+        "http://www.ipa.go.jp/">IPA</a> (Japan).  The CafeOBJ team is lead by
+        Prof <a href = "http://www.jaist.ac.jp/~kokichi/">Prof. Kokichi
+        Futatsugi</a>, at <a href= "http://www.jaist.ac.jp/">JAIST</a>
+        (Japan), who is one of the original developers of OBJ2.  CafeOBJ
+        preserves the distinctive useful features of OBJ3, including mix-fix
+        syntax, subtyping by ordered sorts, modules with parameterized
+        programming, and it adds new logics and features to handle the object
+        paradigm, including <a href=
+        "http://www-cse.ucsd.edu/users/goguen/projs/halg.html">hidden
+        algebra</a> and <a href= "http://www.csl.sri.com/rewriting">rewriting
+        logic</a>, and their combinations with order sorted algebra.  This
+        multi-paradigm approach has an elegant mathematical semantics based on
+        multiple institutions, due to <a href=
+        "http://www.imar.ro/~diacon">Razvan Diaconescu</a>.  Some theorem
+        proving capabilities are also supported.
+	</li>
+
+        <li> OBJ is used in the <a href=
+        "http://www-cse.ucsd.edu/groups/tatami/">Tatami</a> project, which is
+        developing the Kumo proof assistant and proof website generator.  The
+        project is now preparing Kumo to use the BOBJ system.  </li>
+
+        <li> <a href= "http://maude.csl.sri.com/">Maude</a> - Maude
+        incorporates most features of OBJ3, sometimes with small syntactic
+        changes, and adds an implementation of <a href=
+        "http://www.csl.sri.com/rewriting">rewriting logic</a>, using a new
+        and more powerful rewriting engine, and using the membership
+        equational logic generalization of order sorted equational logic. The
+        Computer Science Lab at SRI International has a <a href=
+        "http://maude.csl.sri.com">Maude homepage</a>; see also the SRI CSL <a
+        href= "http://www.csl.sri.com/rewriting/">rewriting logic
+        homepage</a>.  Maude is particularly good for applications that
+        involve logical reflection and meta-logical programming.  </li>
+
+       <li> The module systems of Ada, ML, C++ and Lotos have all been
+       influenced by the OBJ module system; Lotos also uses the initial
+       algebra semantics that was pioneered by OBJ. </li>
+      </ul>
+      </p>
+  </li>
+
+  <li> <em>What is the state of research in Hidden Algebra?</em>
+
+      <p> Hidden algebra and its implementation technology are
+      evolving rapidly at this time.  For the latest information on this and
+      related topics, check Joseph Goguen's "What's New" link at the top of his
+      <a href="http://www-cse.ucsd.edu/users/goguen/">homepage</a>, and/or browse
+      through his rather extended website.  <a
+      href="http://www-cse.ucsd.edu/groups/tatami/kumo/">Kumo</a> is a major
+      focus for current research in the "<a
+      href="http://www.cs.ucsd.edu/groups/tatami/">Tatami</a>" project.</p>
+  </li>
+      
+  <li> <em>What is the future of OBJ3?</em>
+
+      <p> OBJ or its derivatives are currently being used for a number of
+      active research projects including (partial list):</p> <ul>
+
+        <li> The above mentioned related projects: <a href=
+        "http://cat.ucsd.edu:8008/cafeobj/">CafeOBJ</a>, <a href=
+        "http://www-cse.ucsd.edu/groups/tatami/">Tatami</a>, and <a href=
+        "http://www-cse.ucsd.edu/groups/tatami/kumo/">Kumo</a>.  </li>
+
+        <li> <a href= "http://www-cse.ucsd.edu/groups/tatami/bobj/">BOBJ</a>
+        is expected to become the next generation system used at UCSD, since
+        it should eventually be fully upward compatible with OBJ3, it supports
+        the most recent ideas in behavioral specification, computation, and
+        verification, and it will be integrated with Kumo.  </li>
+      </ul>
+  </li>
+</ol>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="index.html"> Index </a> ]
+[ <a href="README.html"> Readme </a> ]
+[ FAQ ] 
+[ <a href="RELEASE_NOTES.html"> Release Notes </a> ] 
+[ <a href="TODO.html"> To-Do List </a> ]
+[ <a href="BUGS.html"> Bug List </a> ] 
+[ <a href="source/README.html"> Source </a> ] 
+[ <a href="docs/index.html"> Papers </a> ] 
+[ <a href="docs/obj_bib.html"> Bibliography </a> ]
+[ <a href="LICENSE.html"> License </a> ] </p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Mon Sep 29 15:27:59 CEST 2003
+<!-- hhmts end -->
+</body>
+</html>

@@ -1,0 +1,64 @@
+obj NAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat [prec 1] .
+  op _+_ : Nat Nat -> Nat [assoc comm prec 3] .
+  vars M N : Nat .
+  eq M + 0 = M .
+  eq M + s N = s(M + N).
+  op _*_ : Nat Nat -> Nat [prec 2] .
+  eq M * 0 = 0 .
+  eq M * s N = M * N + M .
+endo
+obj VARS is
+  protecting NAT .
+  ops m n : -> Nat .
+endo
+
+***> first show two lemmas, 0*n=0 and sm*n=m*n+n
+***> base for first lemma
+reduce 0 * 0 == 0 .
+***> induction step for first lemma
+obj HYP1 is
+  using VARS .
+  eq 0 * n = 0 .
+endo
+reduce 0 * s n == 0 .
+*** thus we can assert
+obj LEMMA1 is
+  protecting NAT .
+  vars N : Nat .
+  eq 0 * N = 0 .
+endo
+
+***> base for second lemma
+reduce in VARS + LEMMA1 : s n * 0 == n * 0 + 0 .
+***> induction step for second lemma
+obj HYP2 is
+  using VARS .
+  eq s m * n = m * n + n .
+endo
+reduce s m * s n == (m * s n)+ s n .
+*** so we can assert
+obj LEMMA2 is
+  protecting NAT .
+  vars M N : Nat .
+  eq s M * N = M * N + N .
+endo
+
+obj SUM is
+  protecting NAT .
+  op sum : Nat -> Nat .
+  var N : Nat .
+  eq sum(0) = 0 .
+  eq sum(s N) = s N + sum(N) .
+endo
+***> show sum(n)+sum(n)=n*sn
+***> base case
+reduce in SUM + LEMMA1 : sum(0) + sum(0) == 0 * s 0 .
+***> induction step
+obj HYP is
+  using SUM + VARS .
+  eq sum(n) + sum(n) = n * s n .
+endo
+reduce in HYP + LEMMA2 : sum(s n) + sum(s n) == s n * s s n .

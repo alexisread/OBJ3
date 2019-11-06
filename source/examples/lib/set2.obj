@@ -1,0 +1,48 @@
+ obj SET[X :: TRIV] is
+  sort Set .
+  protecting IDENTICAL .
+  protecting INT .
+  ops ({}) : -> Set .
+  op {_} : Elt -> Set .
+  op _+_ : Set Set -> Set [gather (e E)] .
+      *** [assoc comm idr: ({})] .  *** union value
+  vars S S' S'' : Set .
+  vars E E' : Elt .
+  var X : Elt .
+  op _&_ : Set Set -> Set [assoc comm] .  *** intersection
+  op _U_ : Set Set -> Set [assoc comm idr: ({})] .
+  op _-_ : Set Set -> Set .
+  op #_ : Set -> Int [prec 0] .
+  op _in_ : Elt Set -> Bool .
+  op _subset_ : Set Set -> Bool .
+  op empty?_ : Set -> Bool .
+
+  eq {} + S = S .
+  eq S + {} = S .
+
+  eq X in {} = false .
+  eq X in { E } = (X == E) .
+  eq X in ({ E } + S) = if X == E then true else X in S fi .
+
+  eq {} & S = {} .
+  eq { E } & S = if E in S then { E } else {} fi .
+  eq ({ E } + S) & S' = if E in S' then { E } + (S & S') else S & S' fi .
+
+  eq {} U S = S .
+  eq { E } U S = if E in S then S else { E } + S fi .
+  eq ({ E } + S) U S' = if E in S' then S U S' else { E } + (S U S') fi .
+
+  eq {} - S = {} .
+  eq { E } - S = if E in S then {} else { E } fi .
+  eq ({ E } + S) - S' = if E in S' then S - S' else { E } + (S - S') fi .
+
+  eq empty? S = (S == {}) .
+
+  eq {} subset S = true .
+  eq { E } subset S = (E in S) .
+  eq ({ E } + S) subset S' = if E in S' then S subset S' else false fi .
+
+  eq # {} = 0 .
+  eq # { E } = 1 .
+  eq #({ X } + S) = if X in S then # S else 1 + # S fi .
+endo

@@ -1,0 +1,15 @@
+in list
+
+th FN is
+  sort S .
+  op f : S -> S .
+endth
+
+obj MAP[F :: FN] is
+  protecting LIST[F] .
+  op map : List -> List .
+  var X : S .
+  var L : List .
+  eq map(nil) = nil .
+  eq map(X L) = f(X) map(L) .
+endo

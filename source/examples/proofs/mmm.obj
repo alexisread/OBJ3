@@ -1,0 +1,23 @@
+obj NAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat [prec 1] .
+  op _+_ : Nat Nat -> Nat [assoc comm prec 3] .
+  vars L M N : Nat .
+  eq M + 0 = M .
+  eq M + s N = s(M + N) .
+  op _*_ : Nat Nat -> Nat [assoc comm prec 2] .
+  eq M * 0 = 0 .
+  eq M * s N = M * N + M .
+  eq L * (M + N) = L * M + L * N .
+  eq M + M + M = 0 .
+endo
+***> base case, x = 0
+reduce 0 * 0 * 0 == 0 .
+***> induction step
+obj VARS is
+  extending NAT .
+  op x : -> Nat .
+  eq x * x * x = x .
+endo
+reduce s x * s x * s x == s x .

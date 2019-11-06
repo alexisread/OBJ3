@@ -1,0 +1,32 @@
+obj LAZYLIST[X :: TRIV] is
+  sort List .
+  subsort Elt < List .
+  op nil : -> List .
+  op __ : List List -> List [assoc idr: nil strat (0)] .
+endo
+
+obj SIEVE is
+  protecting LAZYLIST[INT] .
+  op force : List List -> List [strat (1 2 0)] .
+  op show_upto_ : List Int -> List .
+  op filter_with_ : List Int -> List .
+  op ints-from_ : Int -> List .
+  op sieve_ : List -> List .
+  op primes : -> List .
+  var P I E : Int .
+  var S L : List .
+  eq force(L,S) = L S .
+  eq show nil upto I = nil .
+  eq show E S upto I = if I == 0 then nil
+     else force(E,show S upto (I - 1)) fi . 
+  eq filter nil with P = nil .
+  eq filter I S with P = if (I rem P) == 0 then filter S with P
+     else I (filter S with P) fi .
+  eq ints-from I = I (ints-from (I + 1)) .
+  eq sieve nil = nil .
+  eq sieve (I S) = I (sieve (filter S with I)) .
+  eq primes = sieve (ints-from 2) .
+endo
+
+reduce show primes upto 10 .
+***> should be: 2 3 5 7 11 13 17 19 23 29

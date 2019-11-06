@@ -1,0 +1,15 @@
+#!/bin/csh -f
+# $program:h should return /prgsw/obj/obj-feb92/src
+set program = $0
+set program = $program:h
+set file = $1
+set rootname = $file:r
+set filename = $rootname.tex
+set objfile = $rootname.obj
+if (-e $filename) then
+$program/examples $filename >! $objfile
+# $program/../bin/obj <<eoi
+obj <<eoi
+in $objfile
+eoi
+endif

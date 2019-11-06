@@ -1,0 +1,10 @@
+th FN is
+  sort S .
+  op f : S -> S .
+endth
+
+obj 2[F :: FN] is
+  op xx : S -> S .
+  var X : S .
+  eq xx(X) = f(f(X)) .
+endo

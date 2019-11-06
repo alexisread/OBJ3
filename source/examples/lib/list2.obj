@@ -1,0 +1,15 @@
+obj LIST[X :: TRIV] is
+  sorts List NeList .
+  subsorts Elt < NeList < List .
+  op nil : -> List .
+  op __ : List List -> List [assoc id: nil prec 9] .
+  op __ : NeList List -> NeList [assoc prec 9] .
+  op head_ : NeList -> Elt .
+  op tail_ : NeList -> List .
+  op empty?_ : List -> Bool .
+  var X : Elt .
+  var L : List .
+  eq head(X L) = X .
+  eq tail(X L) = L .
+  eq empty? L = L == nil .
+endo

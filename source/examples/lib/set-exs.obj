@@ -1,0 +1,23 @@
+in set
+
+*** test cases
+obj SET-OF-INT is
+  protecting SET[INT] .
+  ops s1 s2 s3 : -> Set [memo] .
+  eq s1 = { 1 } .
+  eq s2 = s1 U { 2 } .
+  eq s3 = s2 U { 3 } .
+endo
+reduce s3 .               ***> should be: {1,2,3}
+reduce # s3 .             ***> should be: 3
+reduce (s2 U s1) .        ***> should be: {1,2}
+reduce #(s3 U s1) .       ***> should be: 3
+reduce empty?(s3 + s3) .  ***> should be: true
+reduce empty?(s1 + s3) .  ***> should be: false
+reduce 3 in s2 .          ***> should be: false
+reduce s1 in s3 .         ***> should be: true
+reduce s1 - s3 .          ***> should be: {}
+reduce s3 - s2 .          ***> should be: {3}
+reduce s3 & s1 .          ***> should be: {1}
+reduce s3 & s2 .          ***> should be: {1,2}
+reduce omega U s2 .       ***> should be: omega

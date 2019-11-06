@@ -1,0 +1,16 @@
+in 2
+
+obj FNS is
+  protecting INT .
+  ops (sq_) (dbl_) (_*3) : Int -> Int .
+  var N : Int .
+  eq sq N = N * N .
+  eq dbl N = N + N .
+  eq N *3 = N * 3 .
+endo
+
+reduce in 2[(sq_).FNS] : xx(3) .                    ***> should be: 81
+reduce xx(4) .                                      ***> should be: 256
+reduce in 2[(dbl_).FNS] : xx(3) .                   ***> should be: 12
+reduce in 2[2[(sq_).FNS]*(op xx to f)] : xx(2) .    ***> should be: 65536
+reduce xx(3) .                                      ***> should be: 43046721

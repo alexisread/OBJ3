@@ -1,0 +1,233 @@
+/////////////////////////////////////////////////////////////////////////////
+//  trim_instr.imp
+//
+//  define the TRIM instruction implementations.
+//
+//  Written by Lutz H. Hamel.
+//  (c) copyright 1994.
+/////////////////////////////////////////////////////////////////////////////
+
+#ifndef TRIM_INSTR_IMP
+#define TRIM_INSTR_IMP
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::apply()
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+
+	assert(ek->Count());
+
+	GetState()->RLoad(ek->Pop());
+	GetState()->GetStateReg() = Reduced;
+	no_reduct++;
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::load()
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+
+	assert(ek->Count());
+
+	GetState()->RLoad(ek->Pop());
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::restore()
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+	iTermStack * wk = GetState()->GetWorkStack();
+
+	assert(ek->Count());
+
+	wk->Clear();
+	wk->Push(ek->Top());
+	GetState()->GetEnv()->Clear();
+	GetState()->GetStateReg() = Normal;
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::saveop()
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+
+	assert(ek->Count());  
+
+	iTerm * t = ek->Pop();
+
+	t->FlagNormalForm();
+	GetState()->GetOperandStack()->Push(t);
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::killop()
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+
+	assert(ek->Count());
+
+	ek->Pop();
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::pushframe()
+{
+	// the new state carries copies of the sort order and the
+	// operator table.
+
+	State * s = mem(new State(GetState()->GetSortOrder(),
+				  GetState()->GetOpTable()));
+
+	// copy the environment from the previous state into the
+	// environment of the new state.
+
+	*(s->GetEnv()) = *(GetStateStack()->Top()->GetEnv());
+
+	// push the new state onto the stack.
+
+	GetStateStack()->Push(s);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::popframe()
+{
+	GetStateStack()->Pop();
+
+	assert(GetStateStack()->Count() != 0);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::bind (String x, String sn)
+{
+	iTermStack * wk = GetState()->GetWorkStack();
+	TrimEnv * env = GetState()->GetEnv();
+
+	assert(wk->Count());
+
+	if (GetState()->GetSortOrder()->InOrder(wk->Top()->GetSort(), sn))
+	{
+		iTerm * t = wk->Pop();
+		env->Assign(x, t);
+		GetState()->GetIsReg() = TRUE;
+		return;
+	}
+	else
+	{
+		GetState()->GetStateReg() = Failure;
+		GetState()->GetIsReg() = FALSE;
+		return;
+	}	
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::get (String x)
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+	TrimEnv * env = GetState()->GetEnv();
+
+	iTerm * t = env->Fetch(x);
+
+	// *NOTE* the assumption is that the EqCompiler will have
+	// verified that every variable on the rhs has appeared on
+	// the lhs -- therefore no check necessary here!
+	// if (t)
+	// {
+		ek->Push(t);
+		GetState()->GetIsReg() = TRUE;
+		return;
+	// }
+	// else
+	// {
+	//	GetState()->GetStateReg() = Failure;
+	//	GetState()->GetIsReg() = FALSE;
+	//	return;
+	// }	
+}
+	
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::set (TrimMode m)
+{
+	if (!(m & (DONE|NFORM)))
+	{
+		GetState()->GetStateReg() = InterpretMode(m);
+		return;
+	}	
+	else 
+	{
+		GetState()->GetStateReg() = Fatal;
+		return;
+	}		
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef INSTR_INLINE
+inline
+#endif
+void Trim::peek (String op, String ty, long ar)
+{
+	iTermStack * ek = GetState()->GetEvalStack();
+
+	assert(ek->Count());
+
+	GetState()->GetIsReg() = ek->Top()->Match(op, ty, ar);
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif /* TRIM_INSTR_IMP */
+
+

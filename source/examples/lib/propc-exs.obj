@@ -1,0 +1,17 @@
+in propc
+
+reduce 'a or not 'a .
+reduce 'a or 'b iff 'b or 'a .
+reduce 'a implies ('b implies 'a).
+reduce 'a implies 'b iff not 'b implies not 'a .
+reduce not('a or 'b) iff not 'a and not 'b .
+reduce 'c or 'c and 'd iff 'c .
+reduce 'a iff 'a iff 'a iff 'a .
+reduce 'p implies 'q and 'r iff ('p implies 'q) and ('p implies 'r).
+
+reduce 'a iff not 'b .                   ***> should be: 'a xor 'b
+reduce 'a and 'b xor 'c xor 'b and 'a .  ***> should be: 'c
+reduce 'a implies ('b implies not 'a).  
+  ***> should be: true xor ('b and 'a)
+reduce 'a and not 'a .                   ***> should be: false
+reduce 'a iff 'a iff 'a .                ***> should be: 'a

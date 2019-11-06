@@ -1,0 +1,27 @@
+obj NAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat [prec 1] .
+  op _+_ : Nat Nat -> Nat .
+  vars L M N : Nat .
+  eq M + 0 = M .
+  eq M + s N = s(M + N) .
+endo
+
+open .
+ops l m n : -> Nat .
+
+*** base case, n=0: l+(m+0)=(l+m)+0
+reduce l + (m + 0) == (l + m) + 0 .
+
+*** induction step
+eq l + (m + n) = (l + m) + n .
+reduce l + (m + s n) == (l + m) + s n .
+close
+
+*** thus we can assert
+obj ASSOC is
+  protecting NAT .
+  vars-of NAT .
+  eq L + (M + N) = (L + M) + N .
+endo

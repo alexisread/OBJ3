@@ -1,0 +1,29 @@
+in propc
+
+obj TIME is
+  sort Time .
+  op 0 : -> Time .
+  op s_ : Time -> Time .
+endo
+
+th WIRE is
+  protecting TIME + PROPC .
+  op f1 : Time -> Prop .
+endth
+
+obj NOT[W :: WIRE] is
+  op f2 : Time -> Prop .
+  var T : Time .
+  eq f2(0) = false .
+  eq f2(s T) = not f1(T) .
+endo
+
+obj F is
+  extending TIME + PROPC .
+  op t : -> Time .
+  op f0 : Time -> Prop .
+endo
+
+make 2NOT is NOT[NOT[F]*(op f2 to f1)] endm
+
+reduce f2(s s t) iff f0(t) .  ***> should be: true

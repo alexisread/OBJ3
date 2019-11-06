@@ -1,0 +1,76 @@
+in ../lib/list
+
+obj SUBST is
+  sorts Eqn Term .
+  protecting QID .
+  subsorts Id < Term .
+  pr TERMS is (LIST *(sort List to TermList, sort NeList to NeTermList))[Term].
+  dfn Op is QID .
+  op _[_] : Op TermList -> Term [prec 1] .
+  op _=_ : Term Term -> Eqn [comm prec 120] .
+  pr SYSTEM is (LIST *(sort List to System, sort NeList to NeSystem, 
+     op nil to null, op (__) to (_&_)))[Eqn].
+  op {_} : System -> System .   *** scope delimiter
+  op _=_ : TermList TermList -> System [comm prec 120] .
+  vars T U V : Term .   var Us : NeTermList .
+  var S : NeSystem .    var Ts : TermList .
+  eq (T Ts = U Us) = (T = U) & (Ts = Us).
+  op let_be_in_ : Id Term Term -> Term .
+  op let_be_in_ : Id Term TermList -> TermList .
+  op let_be_in_ : Id Term Eqn -> Eqn .
+  op let_be_in_ : Id Term System -> System .
+  vars X Y : Id .     var F : Op .
+  eq let X be T in nil = nil .
+  eq let X be T in Y = if X == Y then T else Y fi .
+  eq let X be T in F[Ts] = F[let X be T in Ts].
+  eq let X be T in (U Us) = (let X be T in U) (let X be T in Us).
+  eq let X be T in (U = V) = (let X be T in U) = (let X be T in V) .
+  eq let X be T in null = null .
+  eq let X be T in ((U = V) & S) = (let X be T in (U = V)) & (let X be T in S).
+endo
+
+***> first without occur check
+obj UNIFY is
+  using SUBST with SYSTEM and TERMS .
+  op unify_ : System -> System [prec 120].
+  op fail : -> Eqn .
+  var T : Term .            vars Ts Us : NeTermList .
+  vars S S' S'' : System .  var X : Id .
+  eq unify S = {{S}} .
+  eq S & (T = T) & S' = S & S' .
+  eq S & fail & S' = fail .
+  eq let X be T in fail = fail .
+  eq {null} = null .
+  eq {fail} = fail .
+  vars F G : Op .   vars X : Id .
+  eq {S & (F[Ts] = G[Us]) & S'} = if F == G and | Ts | == | Us |
+     then {S & (Ts = Us) & S'} else fail fi .
+  eq {S & {S' & (X = T) & S''}} = if X == T then {S & {S' & S''}} else
+     {(X = T) & (let X be T in S) & {let X be T in S' & S''}} fi .
+endo
+reduce unify 'f['g['X] 'Y] = 'f['g['h['Y]] 'h['Z]].
+reduce unify 'f['X 'Y] = 'f['Y 'g['Y]].
+reduce unify ('f['g['X] 'Y] = 'f['g['h['Y]] 'h['Z]]) & ('h['X] = 'Z).
+reduce unify 'f['X 'g['Y]] = 'f['Z 'Z].
+reduce unify 'f['X 'g['Y]] = 'f['Z].
+reduce unify 'f['Y 'g['Y]] = 'f['h['Z] 'Z].
+reduce unify 'f['Y 'a[nil]] = 'f['g['a[nil]] 'Z].
+
+***> now add occur check
+obj UNIFY-OCH is
+  using UNIFY .
+  op _in_ : Id TermList -> Bool .
+  vars X Y : Id .   var F : Op .
+  var T : Term .    var Ts : NeTermList .
+  eq X in Y = X == Y .
+  eq X in F[Ts] = X in Ts .
+  eq X in T Ts = X in T or X in Ts .
+  cq (X = T) = fail if X in T .
+endo
+reduce unify 'f['g['X] 'Y] = 'f['g['h['Y]] 'h['Z]].
+reduce unify 'f['X 'Y] = 'f['Y 'g['Y]].
+reduce unify ('f['g['X] 'Y] = 'f['g['h['Y]] 'h['Z]]) & ('h['X] = 'Z).
+reduce unify 'f['X 'g['Y]] = 'f['Z 'Z].
+reduce unify 'f['X 'g['Y]] = 'f['Z].
+reduce unify 'f['Y 'g['Y]] = 'f['h['Z] 'Z].
+reduce unify 'f['Y 'a[nil]] = 'f['g['a[nil]] 'Z].

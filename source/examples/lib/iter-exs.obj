@@ -1,0 +1,28 @@
+in iter
+
+view NAT* from MONOID to NAT is
+  sort M to Nat .
+  op _*_ to _*_ .
+  op e to 1 .
+ endv
+
+view NAT+ from MONOID to NAT is
+  op _*_ to _+_ .
+  op e to 0 .
+endv
+
+make SIGMA is ITER[NAT+] endm
+
+reduce iter(1 2 3 4) .
+
+***> should be: 10
+
+make PI is ITER[NAT*] endm
+
+reduce iter(1 2 3 4) .
+
+***> should be: 24
+
+make SIGMA+PI is ITER[NAT+]*(op iter to sigma)+ ITER[NAT*]*(op iter to pi) endm
+
+make ITER-NAT is ITER[view to NAT is op _*_ to _+_ . endv] endm

@@ -1,0 +1,56 @@
+obj NAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat [prec 1] .
+  op _+_ : Nat Nat -> Nat [prec 3] .
+  vars M N : Nat .
+  eq M + 0 = M .
+  eq M + s N = s(M + N) .
+endo
+
+obj VARS is
+  extending NAT .
+  ops m n : -> Nat .
+endo
+
+***> first lemma0: 0 + n = n, by induction on n
+***> base for lemma0, n=0
+reduce 0 + 0 == 0 .
+***> induction step
+obj STEP0 is
+  using VARS .
+  eq 0 + n = n .
+endo
+reduce 0 + s n == s n .
+*** thus we can assert
+obj LEMMA0 is
+  protecting NAT .
+  vars N : Nat .
+  eq 0 + N = N .
+endo
+
+***> show lemma1: s m + n = s(m + n), again by induction on n
+***> base for lemma1, n=0
+reduce in VARS : s m + 0 == s(m + 0) .
+***> induction step
+obj STEP1 is
+  using VARS .
+  eq s m + n = s(m + n) .
+endo
+reduce s m + s n == s(m + s n) .
+*** thus we can assert
+obj LEMMA1 is
+  protecting NAT .
+  vars M N : Nat .
+  eq s M + N = s(M + N).
+endo
+
+***> show m + n = n + m, again by induction on n
+***> base case, n=0
+reduce in VARS + LEMMA0 : m + 0 == 0 + m .
+***> induction step
+obj STEP is
+  using VARS + LEMMA1 .
+  eq m + n = n + m .
+endo
+reduce m + s n == s n + m .

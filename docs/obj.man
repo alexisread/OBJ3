@@ -1,0 +1,56 @@
+.TH OBJ l  "Oct 1991"
+.SH NAME
+obj \- an OBJ interpreter written in Common Lisp
+.SH SYNOPSIS
+.B obj
+.SH DESCRIPTION
+.br
+OBJ3 (version 2) is our latest version of OBJ, a wide spectrum
+functional programming language that is rigorously based upon \fBorder
+sorted equational logic\fP.  This logic provides a notion of
+\fBsubsort\fP that rigorously supports multiple inheritance, exception
+handling and overloading.  This rigorous semantic basis allows a
+declarative, specificational style of programming, facilitates program
+verification, and even allows OBJ to be used as a theorem prover.
+Although OBJ3 executable code normally consists of equations that are
+interpreted as rewrite rules, it can also encapsulate Lisp code, e.g.,
+to provide efficient built-in data types.  OBJ provides rewriting
+modulo associative, commutative and/or identity equations, as well as
+user-definable evaluation strategies that allow lazy, eager, and mixed
+evaluation strategies on an operation-by-operation basis; memoization
+is also available on an operation-by-operation basis.
+
+OBJ3 supports \fBparameterized programming\fP, a powerful technique
+for software design, production, reuse and maintenance.  This approach
+involves abstraction through two kinds of module: \fBobjects\fP to
+encapsulate executable code, and in particular to define abstract data
+types; and \fBtheories\fP to specify both syntactic structure and
+semantic properties of modules and module interfaces.  Each kind of
+module can be parameterized, where actual parameters are modules.
+Modules can also import other modules, thus supporting multiple
+inheritance at the module level.  For parameter instantiation, a
+\fBview\fP binds the formal entities in an interface theory to actual
+entities in a module, and also asserts that the module satisfies the
+semantic requirements of the theory.  This integration of objects,
+theories and views provides a powerful wide spectrum capability.
+\fBModule expressions\fP allow complex combinations of already defined
+modules, including sums, instantiations and transformations; moreover,
+evaluating a module expression actually constructs a software
+(sub)system from the given components.  \fBDefault views\fP can
+greatly reduce the effort of instantiating modules.
+
+OBJ3 has a facility for controlled rewriting which can be used
+for equational theorem proving.
+
+.SH FILES
+.br
+obj is distributed with a library of examples.
+.br
+
+.SH SEE ALSO
+.br
+\fIIntroducing OBJ\fP, J. Goguen, T. Winkler, J. Meseguer,
+K. Futatsugi, and J.-P. Jouannaud in \fIApplications of
+Algebraic Specifications using OBJ\fP, Cambridge, 1992, to
+appear as an SRI technical report, 1992.
+.br

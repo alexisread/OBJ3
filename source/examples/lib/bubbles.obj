@@ -1,0 +1,28 @@
+in list2
+
+th POSET is
+  sort Elt .
+  op _<_ : Elt Elt -> Bool .
+  vars E1 E2 E3 : Elt .
+  eq E1 < E1 = false .
+  cq E1 < E3 = true if E1 < E2 and E2 < E3 .
+endth
+
+th TOSET is
+  using POSET .
+  vars E1 E2 E3 : Elt .
+  cq E1 < E2 or E2 < E1 = true if E1 =/= E2 .
+endth
+
+obj BUBBLES[X :: TOSET] is    
+  protecting LIST[X] .        
+  op sorting_ : List -> List .
+  op sorted_ : List -> Bool .
+  vars L L' L'' : List .
+  vars E E' : Elt .
+  cq sorting L = L if sorted L .
+  cq sorting L E E' L'' = sorting L E' E L'' if E' < E .
+  eq sorted nil = true .
+  eq sorted E = true .
+  cq sorted E E' L = sorted E' L if E < E' or E == E' .
+endo

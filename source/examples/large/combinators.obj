@@ -1,0 +1,25 @@
+obj COMINATORS is
+  sort T .
+  op __ : T T -> T [gather (E e)]. *** forces left association
+  ops S K I : -> T .
+  vars M N P : T .
+  eq K M N = M .
+  eq I M = M .
+  eq S M N P = (M P) (N P).
+endo
+
+open .
+ops m n p : -> T .
+
+red S K K m == I m .
+red S K S m == I m .
+red S I I I m == I m .
+
+red K m n == S(S(K S)(S(K K)K))(K(S K K))m n .
+red S m n p == S(S(K S)(S(K(S(K S)))(S(K(S(K K)))S)))(K(K(S K K)))m n p .
+red S(K K) m n p == S(S(K S)(S(K K)(S(K S)K)))(K K) m n p .
+
+let X = S I .
+red X X X X m == X(X(X X)) m .
+
+close

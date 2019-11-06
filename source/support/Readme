@@ -1,0 +1,14 @@
+obj-tex, examples.c, showpos.c, region.c
+
+The script obj-tex may need to be modified, look for uses of the commands:
+  examples obj
+These uses could be changed to refer to specific paths.
+
+The programs region.c and showpos.c are intended for people who want
+to be able to interpret the OBJ3 error messages that refer to
+character positions in input files, but don't use an editor that makes
+it easy to do so (e.g., vi).  Both of these programs can be used to
+examine pieces of a file specified by character positions.
+
+You can build the program example simply by "make examples", and
+likewise "region" and "showpos".

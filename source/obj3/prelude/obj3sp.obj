@@ -1,0 +1,507 @@
+*** OBJ3 2
+*** Copyright (c) 2000, Joseph Kiniry, Joseph Goguen, Sula Ma
+*** Copyright (c) 1988,1991,1993 SRI International
+*** All Rights Reserved
+***
+*** Redistribution and use in source and binary forms, with or without
+*** modification, are permitted provided that the following conditions are
+*** met:
+*** 
+***   o Redistributions of source code must retain the above copyright
+***   notice, this list of conditions and the following disclaimer.
+*** 
+***   o Redistributions in binary form must reproduce the above copyright
+***   notice, this list of conditions and the following disclaimer in the
+***   documentation and/or other materials provided with the distribution.
+*** 
+***   o Neither name of the Joseph Kiniry, Joseph Goguen, Sula Ma, or SRI
+***   International, nor the names of its contributors may be used to
+***   endorse or promote products derived from this software without
+***   specific prior written permission.
+*** 
+*** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+*** ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+*** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+*** FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SRI
+*** INTERNATIONAL OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+*** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+*** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+*** SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+*** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*** STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+*** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+*** OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*** $Id: obj3sp.obj,v 206.1 2003/09/26 13:03:11 kiniry Exp $
+
+--- OBJ standard prelude
+
+ev (setq *obj$include_BOOL* nil)
+
+obj UNIVERSAL is
+  sort Universal .
+endo
+
+ev (progn (obj_UNIVERSAL$install) 'done)
+
+obj ERR is
+ bsort Err
+   (obj_ERR$is_Err_token
+    obj_ERR$create_Err
+    obj_ERR$print_Err
+    obj_ERR$is_Err) .
+endo
+
+ev (progn (obj_ERR$install) 'done)
+
+obj BUILT-IN is
+ bsort Built-in
+   (obj_BUILT-IN$is_Built-in_token
+    obj_BUILT-IN$create_Built-in
+    obj_BUILT-IN$print_Built-in
+    obj_BUILT-IN$is_Built-in) .
+endo
+
+ev (progn (obj_BUILT-IN$install) 'done)
+
+obj LISP is
+ bsort Lisp
+   (obj_LISP$is_Lisp_token
+    obj_LISP$create_Lisp
+    obj_LISP$print_Lisp
+    obj_LISP$is_Lisp) .
+endo
+
+obj TRUTH-VALUE is
+  sort Bool . 
+  op false : -> Bool .
+  op true : -> Bool .
+endo
+
+obj TRUTH is
+  pr TRUTH-VALUE .
+  pr UNIVERSAL .
+  op if_then_else_fi : Bool Universal Universal -> Universal 
+	 [polymorphic obj_BOOL$if_resolver intrinsic strategy (1 0)
+	  gather (& & &) prec 0] .
+  op _==_ : Universal Universal -> Bool
+	 [polymorphic obj_BOOL$eqeq_resolver strategy (1 2 0) prec 51] .
+  op _=/=_ : Universal Universal -> Bool
+	 [polymorphic obj_BOOL$non-eqeq_resolver strategy (1 2 0) prec 51] .
+  ev (obj_TRUTH$setup)
+  var XU YU : Universal .
+  eq if true then XU else YU fi = XU .
+  eq if false then XU else YU fi = YU .
+  ev (obj_TRUTH$install)
+  beq XU == YU =
+      (obj_BOOL$coerce_to_Bool (term$equational_equal XU YU)) .
+  beq XU =/= YU =
+      (obj_BOOL$coerce_to_Bool (not (term$equational_equal XU YU))) .
+  ev (obj_TRUTH$install)
+endo
+
+obj BOOL is
+  pr TRUTH .
+  op _and_ : Bool Bool -> Bool [assoc comm idr: true
+				strat (1 2 0)
+				gather (e E) prec 55] .
+  op _or_ : Bool Bool -> Bool [assoc comm idr: false
+				strat (1 2 0)
+				gather (e E) prec 59] .
+  op _xor_ : Bool Bool -> Bool [assoc comm idr: false
+				strat (1 2 0)
+				gather (e E) prec 57] .
+  op not_ : Bool -> Bool [prec 53] .
+  op _implies_ : Bool Bool -> Bool [gather (e E) prec 61] .
+  ev (obj_BOOL$setup)
+  vars A B : Bool .
+  eq not true = false .
+  eq not false = true .
+  eq false and A = false .
+  eq true or A = true .
+  eq A implies B = (not A) or B .
+  eq true xor true = false .
+endo
+
+obj IDENTICAL is
+  pr BOOL .
+  op _===_ : Universal Universal -> Bool [strategy (0) prec 51] .
+  op _=/==_ : Universal Universal -> Bool [strategy (0) prec 51] .
+  var XU YU : Universal .
+  beq XU === YU =
+      (obj_BOOL$coerce_to_Bool (term$similar XU YU)) .
+  beq XU =/== YU =
+      (obj_BOOL$coerce_to_Bool (not (term$similar XU YU))) .
+endo
+
+ev (progn (obj_IDENTICAL$setup) 'done)
+
+obj LAST-TERM is
+  protecting UNIVERSAL .
+  protecting TRUTH-VALUE .
+  op last-term-undefined : -> Universal .
+  op [term] : -> Universal .
+  eq [term] = last-term-undefined .
+endo
+
+ev (progn (obj_LAST-TERM$install) 'done)
+
+obj NZNAT is
+  bsort NzNat
+    (obj_NZNAT$is_NzNat_token obj_NZNAT$create_NzNat prin1
+     obj_NZNAT$is_NzNat) .
+  protecting BOOL .
+  op _+_ : NzNat NzNat -> NzNat [assoc comm prec 33] .
+  op d : NzNat NzNat -> NzNat [comm] .
+  op _*_ : NzNat NzNat -> NzNat [assoc comm idr: 1 prec 31] .
+  op quot : NzNat NzNat -> NzNat [gather (E e) prec 31] .
+  op _<_ : NzNat NzNat -> Bool [prec 51] .
+  op _<=_ : NzNat NzNat -> Bool [prec 51] .
+  op _>_ : NzNat NzNat -> Bool [prec 51] .
+  op _>=_ : NzNat NzNat -> Bool [prec 51] .
+  op s_ : NzNat -> NzNat [prec 15] .
+  vars NN NM : NzNat .
+  bq NN + NM = (if (and (numberp NN) (numberp NM))
+                   (+ NN NM)
+	           (throw 'rule_failure nil)) .
+  bq d(NN,NM) = (if (and (numberp NN) (numberp NM))
+	            (if (= NN NM) 1 (abs (- NN NM)))
+	            (throw 'rule_failure nil)) .
+  bq NN * NM = (if (and (numberp NN) (numberp NM))
+                   (* NN NM)
+                 (throw 'rule_failure nil)) .
+  bq quot(NN,NM) = (if (and (numberp NN) (numberp NM))
+                       (if (> NN NM) (truncate NN NM) 1)
+                     (throw 'rule_failure nil)) .
+  bq NN < NM = (if (and (numberp NN) (numberp NM))
+                   (< NN NM)
+                 (throw 'rule_failure nil)) .
+  bq NN <= NM = (if (and (numberp NN) (numberp NM))
+                    (<= NN NM)
+                   (throw 'rule_failure nil)) .
+  bq NN > NM = (if (and (numberp NN) (numberp NM))
+                   (> NN NM)
+                   (throw 'rule_failure nil)) .
+  bq NN >= NM = (if (and (numberp NN) (numberp NM))
+                    (>= NN NM)
+                    (throw 'rule_failure nil)) .
+  bq s NN = (if (numberp NN)
+                (1+ NN)
+	        (throw 'rule_failure nil)) .
+jbo
+
+obj NAT is
+  bsort Nat
+    (obj_NAT$is_Nat_token obj_NAT$create_Nat prin1
+     obj_NAT$is_Nat) .
+  protecting NZNAT .
+  bsort Zero
+    (obj_NAT$is_Zero_token obj_NAT$create_Zero prin1
+     obj_NAT$is_Zero) .
+  subsorts NzNat < Nat .
+  subsorts Zero < Nat .
+  op _+_ : Nat Nat -> Nat [assoc comm idr: 0 prec 33] .
+  op sd : Nat Nat -> Nat [comm] .
+  op _*_ : Nat Nat -> Nat [assoc comm idr: 1 prec 31] .
+  op _quo_ : Nat NzNat -> Nat [gather (E e) prec 31] .
+  op _rem_ : Nat NzNat -> Nat [gather (E e) prec 31] .
+  op _divides_ : NzNat Nat -> Bool [prec 51] .
+  op _<_ : Nat Nat -> Bool [prec 51] .
+  op _<=_ : Nat Nat -> Bool [prec 51] .
+  op _>_ : Nat Nat -> Bool [prec 51] .
+  op _>=_ : Nat Nat -> Bool [prec 51] .
+  op s_ : Nat -> NzNat [prec 15] .
+  op p_ : NzNat -> Nat [prec 15] .
+  var M N : Nat .
+  var NN : NzNat .
+***  eq N + 0 = N . 
+  bq sd(M,N) = (abs (- M N)) .
+  eq N * 0 = 0 .
+  bq M quo NN = (truncate M NN) .
+  bq M rem NN = (rem M NN) .
+  bq NN divides M = (= 0 (rem M NN)) .
+  eq N < 0 = false .
+  eq 0 < NN = true .
+  eq NN <= 0 = false .
+  eq 0 <= N = true .
+  eq 0 > N = false .
+  eq NN > 0 = true .
+  eq 0 >= NN = false .
+  eq N >= 0 = true .
+  eq s 0 = 1 .
+  bq p NN = (- NN 1) .
+jbo
+
+obj INT is
+  bsort Int
+    (obj_INT$is_Int_token obj_INT$create_Int prin1
+     obj_INT$is_Int) .
+  bsort NzInt
+    (obj_INT$is_NzInt_token obj_INT$create_NzInt prin1
+     obj_INT$is_NzInt) .
+  protecting NAT .
+  subsorts Nat < Int .
+  subsorts NzNat < NzInt < Int .
+  op -_ : Int -> Int [prec 15] .
+  op -_ : NzInt -> NzInt [prec 15] .
+  op _+_ : Int Int -> Int [assoc comm idr: 0 prec 33] .
+  op _-_ : Int Int -> Int [gather (E e) prec 33] .
+  op _*_ : Int Int -> Int [assoc comm idr: 1 prec 31] .
+  op _*_ : NzInt NzInt -> NzInt [assoc comm idr: 1 prec 31] .
+  op _quo_ : Int NzInt -> Int [gather (E e) prec 31] .
+  op _rem_ : Int NzInt -> Int [gather (E e) prec 31].
+  op _divides_ : NzInt Int -> Bool [prec 51] .
+  op _<_ : Int Int -> Bool [prec 51] .
+  op _<=_ : Int Int -> Bool [prec 51] .
+  op _>_ : Int Int -> Bool [prec 51] .
+  op _>=_ : Int Int -> Bool [prec 51] .
+  op s_ : Int -> Int [prec 15] .
+  vars I J : Int .
+  var NJ : NzInt .
+  bq - I = (if (numberp I)
+               (- I)
+             (throw 'rule_failure nil)) .
+  bq I + J = (if (and (numberp I) (numberp J))
+                 (+ I J)
+             (throw 'rule_failure nil)) .
+  eq I - J = I + (- J) .
+  bq I * J = (if (and (numberp I) (numberp J))
+	         (* I J)
+             (throw 'rule_failure nil)) .
+  bq I quo NJ = (if (and (numberp I) (numberp NJ))
+                    (truncate I NJ)
+             (throw 'rule_failure nil)) .
+  bq I rem NJ = (if (and (numberp I) (numberp NJ))
+                    (rem I NJ)
+             (throw 'rule_failure nil)) .
+  bq NJ divides I = (if (and (numberp I) (numberp NJ))
+                        (= 0 (rem I NJ))
+             (throw 'rule_failure nil)) .
+  bq I < J = (if (and (numberp I) (numberp J))
+                 (< I J)
+             (throw 'rule_failure nil)) .
+  bq I <= J = (if (and (numberp I) (numberp J))
+                  (<= I J)
+             (throw 'rule_failure nil)) .
+  bq I > J = (if (and (numberp I) (numberp J))
+                 (> I J)
+             (throw 'rule_failure nil)) .
+  bq I >= J = (if (and (numberp I) (numberp J))
+                  (>= I J)
+             (throw 'rule_failure nil)) .
+  eq s I = 1 + I .
+jbo
+
+obj RAT is
+  bsort Rat
+    (obj_RAT$is_Rat_token obj_RAT$create_Rat obj_RAT$print
+     rationalp) .
+  bsort NzRat
+    (obj_RAT$is_NzRat_token obj_RAT$create_NzRat obj_RAT$print
+     obj_RAT$is_NzRat) .
+  protecting INT .
+  subsorts Int < Rat .
+  subsorts NzInt < NzRat < Rat .
+  op -_  : Rat -> Rat [prec 15] .
+  op -_  : NzRat -> NzRat [prec 15] .
+  op _+_ : Rat Rat -> Rat [assoc comm idr: 0 prec 33] .
+  op _-_ : Rat Rat -> Rat [gather (E e) prec 33] .
+  op _*_ : Rat Rat -> Rat [assoc comm idr: 1 prec 31] .
+  op _*_ : NzRat NzRat -> NzRat [assoc comm idr: 1 prec 31] .
+  op _/_ : Rat NzRat -> Rat [gather (E e) prec 31] .
+  op _/_ : NzRat NzRat -> NzRat [gather (E e) prec 31] .
+  op _rem_ : Rat NzRat -> Rat [gather (E e) prec 31] .
+  op _<_ : Rat Rat -> Bool [prec 51] .
+  op _<=_ : Rat Rat -> Bool [prec 51] .
+  op _>_ : Rat Rat -> Bool [prec 51] .
+  op _>=_ : Rat Rat -> Bool [prec 51] .
+  vars R S : Rat .
+  vars NS : NzRat .
+  bq - R = (if (numberp R)
+               (- R)
+	         (throw 'rule_failure nil)) .
+  bq R + S = (if (and (numberp R) (numberp S))
+                 (+ R S)
+	         (throw 'rule_failure nil)) .
+
+  eq R - S = R + (- S) .
+  bq R * S =  (if (and (numberp R) (numberp S))
+                (* R S)
+	         (throw 'rule_failure nil)) .
+  bq R / NS =  (if (and (numberp R) (numberp NS))
+                (/ R NS)
+	         (throw 'rule_failure nil)) .
+  bq R rem NS =  (if (and (numberp R) (numberp NS))
+                (rem R NS)
+	         (throw 'rule_failure nil)) .
+  bq R < S =  (if (and (numberp R) (numberp S))
+                (< R S)
+	         (throw 'rule_failure nil)) .
+  bq R <= S =  (if (and (numberp R) (numberp S))
+                (<= R S)
+	         (throw 'rule_failure nil)) .
+  bq R > S =  (if (and (numberp R) (numberp S))
+                (> R S)
+	         (throw 'rule_failure nil)) .
+  bq R >= S =  (if (and (numberp R) (numberp S))
+                (>= R S)
+	         (throw 'rule_failure nil)) .
+jbo
+
+obj ID is
+ bsort Id (obj_ID$is_Id_token obj_ID$create_Id obj_ID$print_Id
+	   obj_ID$is_Id) .
+ pr BOOL .
+ op _<_ : Id Id -> Bool [prec 51] .
+ var !X !Y : Id .
+ --- the variable names have been chosen so that they are not Id's
+ bq !X < !Y = (string< !X !Y) .
+endo
+
+obj QID is
+ --- Quoted IDentifier
+ --- symbols starting with ' character
+ bsort Id (obj_QID$is_Id_token obj_QID$create_Id obj_QID$print_Id
+	   obj_QID$is_Id) .
+endo
+
+obj QIDL is
+ protecting QID .
+ pr BOOL .
+ op _<_ : Id Id -> Bool [prec 51] .
+ var X Y : Id .
+ bq X < Y = (string< X Y) .
+endo
+
+th TRIV is
+  sort Elt .
+endth
+
+obj FLOAT is
+ bsort Float
+   (obj_FLOAT$is_Float_token obj_FLOAT$create_Float obj_FLOAT$print_Float
+    obj_FLOAT$is_Float) .
+ pr BOOL .
+
+ op -_ : Float -> Float [prec 15] .
+ op _+_ : Float Float -> Float [assoc comm prec 33] .
+ op _-_ : Float Float -> Float [gather (E e) prec 33] .
+ op _*_ : Float Float -> Float [assoc comm prec 31] .
+ op _/_ : Float Float -> Float [gather (E e) prec 31] .
+ op _rem_ : Float Float -> Float [gather (E e) prec 31] .
+ op exp : Float -> Float .
+ op log : Float -> Float .
+ op sqrt : Float -> Float .
+ op abs : Float -> Float .
+ op sin : Float -> Float .
+ op cos : Float -> Float .
+ op atan : Float -> Float .
+ op pi : -> Float .
+ op _<_ : Float Float -> Bool [prec 51] .
+ op _<=_ : Float Float -> Bool [prec 51] .
+ op _>_ : Float Float -> Bool [prec 51] .
+ op _>=_ : Float Float -> Bool [prec 51] .
+ op _=[_]_ : Float Float Float -> Bool [prec 51] .
+
+ vars X Y Z : Float .
+ bq X + Y = (if (and (numberp X) (numberp Y))
+                (+ X Y)
+		(throw 'rule_failure nil)) .
+ bq - X = (if (numberp X)
+                (- X) 
+		(throw 'rule_failure nil)) .
+ bq X - Y = (if (and (numberp X) (numberp Y))
+               (- X Y)
+		(throw 'rule_failure nil)) .
+ bq X * Y = (if (and (numberp X) (numberp Y))
+               (* X Y)
+		(throw 'rule_failure nil)) .
+ bq X / Y = (if (and (numberp X) (numberp Y))
+               (/ X Y)
+		(throw 'rule_failure nil)) .
+ bq X rem Y = (if (and (numberp X) (numberp Y))
+               (rem X Y)
+		(throw 'rule_failure nil)) .
+ bq exp(X) = (if (numberp X)
+               (exp X)
+		(throw 'rule_failure nil)) .
+ bq log(X) = (if (numberp X)
+               (log X)
+		(throw 'rule_failure nil)) .
+ bq sqrt(X) = (if (numberp X)
+               (sqrt X)
+		(throw 'rule_failure nil)) .
+ bq abs(X) = (if (numberp X)
+               (abs X)
+		(throw 'rule_failure nil)) .
+ bq sin(X) = (if (numberp X)
+               (sin X) 
+		(throw 'rule_failure nil)) .
+ bq cos(X) = (if (numberp X)
+               (cos X)
+		(throw 'rule_failure nil)) .
+ bq atan(X) = (if (numberp X)
+               (atan X)
+		(throw 'rule_failure nil)) .
+ bq pi = pi .
+ bq X < Y = (if (and (numberp X) (numberp Y))
+               (< X Y)
+		(throw 'rule_failure nil)) .
+ bq X <= Y = (if (and (numberp X) (numberp Y))
+               (<= X Y)
+		(throw 'rule_failure nil)) .
+ bq X > Y = (if (and (numberp X) (numberp Y))
+               (> X Y)
+		(throw 'rule_failure nil)) .
+ bq X >= Y = (if (and (numberp X) (numberp Y))
+               (>= X Y)
+		(throw 'rule_failure nil)) .
+ bq (X =[ Z ] Y) = (if (and (numberp X) (numberp Y) (numperp Z))
+               (< (abs (- X Y)) Z)
+		(throw 'rule_failure nil)) .
+endo
+
+obj 2TUPLE[C1 :: TRIV, C2 :: TRIV] is
+  sort 2Tuple .
+  op <<_;_>> : Elt.C1 Elt.C2 -> 2Tuple .
+  op 1*_ : 2Tuple -> Elt.C1 .
+  op 2*_ : 2Tuple -> Elt.C2 .
+  var e1 : Elt.C1 .
+  var e2 : Elt.C2 .
+  eq 1* << e1 ; e2 >> = e1 .
+  eq 2* << e1 ; e2 >> = e2 .
+endo
+
+obj 3TUPLE[C1 :: TRIV, C2 :: TRIV, C3 :: TRIV] is
+  sort 3Tuple .
+  op <<_;_;_>> : Elt.C1 Elt.C2 Elt.C3 -> 3Tuple .
+  op 1*_ : 3Tuple -> Elt.C1 .
+  op 2*_ : 3Tuple -> Elt.C2 .
+  op 3*_ : 3Tuple -> Elt.C3 .
+  var e1 : Elt.C1 .
+  var e2 : Elt.C2 .
+  var e3 : Elt.C3 .
+  eq 1* << e1 ; e2 ; e3 >> = e1 .
+  eq 2* << e1 ; e2 ; e3 >> = e2 .
+  eq 3* << e1 ; e2 ; e3 >> = e3 .
+endo
+
+obj 4TUPLE[C1 :: TRIV, C2 :: TRIV, C3 :: TRIV, C4 :: TRIV] is
+  sort 4Tuple .
+  op <<_;_;_;_>> : Elt.C1 Elt.C2 Elt.C3 Elt.C4 -> 4Tuple .
+  op 1*_ : 4Tuple -> Elt.C1 .
+  op 2*_ : 4Tuple -> Elt.C2 .
+  op 3*_ : 4Tuple -> Elt.C3 .
+  op 4*_ : 4Tuple -> Elt.C4 .
+  var e1 : Elt.C1 .
+  var e2 : Elt.C2 .
+  var e3 : Elt.C3 .
+  var e4 : Elt.C4 .
+  eq 1* << e1 ; e2 ; e3 ; e4 >> = e1 .
+  eq 2* << e1 ; e2 ; e3 ; e4 >> = e2 .
+  eq 3* << e1 ; e2 ; e3 ; e4 >> = e3 .
+  eq 4* << e1 ; e2 ; e3 ; e4 >> = e4 .
+endo
+
+ev (setq *obj$include_BOOL* t)
+ev (progn (obj$prelude_install) 'done)

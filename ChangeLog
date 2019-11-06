@@ -1,0 +1,482 @@
+2003-09-29  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile:
+	* RELEASE_NOTES.html:
+	* TODO.html:
+	* index.html:
+	* source/README.html:
+	* source/obj3/README.html:
+	Final tweaks for the 2.09 release: details of lisp versions used, how
+	to build OBJ3, zip usage for distribution archive, etc.
+
+	* FAQ.html: Update for 2.09 release.
+
+	* Makefile: Release building updated.
+
+	* BUGS.html:
+	* FAQ.html:
+	* LICENSE.html:
+	* README.html:
+	* RELEASE_NOTES.html:
+	* TODO.html:
+	* docs/index.html:
+	* docs/obj_bib.html:
+	* index.html:
+	* source/README.html:
+	* source/obj3/README.html:
+	Updates for 2.09 (CMU+GCL) release.
+
+	* source/obj3/match/ac.lsp:
+	* source/obj3/match/acz.lsp:
+	* source/obj3/match/z.lsp:
+	* source/obj3/modexp/mapping.lsp:
+	* source/obj3/rew/substitution.lsp:
+	* source/obj3/tools/obj_print.lsp:
+	* source/obj3/top/misc.lsp:
+	Final tweaks for CLISP compatibility.  While OBJ3 now builds with
+	CLISP, it does not run properly.  Some debugging in lib/function.lsp
+	is still necessary.  We'll leave this for the next release.
+
+2003-09-26  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/obj3/basic/utilities.lsp: CLISP update.
+
+	* Makefile: .PHONY added.
+
+	* source/obj3/obj3.sh, source/obj3/obj3-load.sh:
+	'in-package' modernization.  CMU and CLISP support updated.
+
+	* source/obj3/obj3-lisp-dir.lsp:
+	* source/obj3/obj3-files.lsp:
+	'in-package' modernization.
+
+	* source/obj3/obj3-compile.sh: Optimization and cleanup updates.
+
+	* source/obj3/top/top.lsp:
+	Eliminated get_pid/getpid in lieu of time-based generic implementation
+	of temporary file name.  CLISP update, particularly wrt
+	*standard-input* issues.
+
+	* source/obj3/top/module_parse.lsp: CLISP *standard-input* support.
+
+	* source/obj3/tools/tools.lsp: Compiled file suffix cleanup.
+
+	* source/obj3/prelude/obj3sp.lsp:
+	Cleanup of floating point types for all compilers.
+
+	* source/obj3/lib/addr.lsp:
+	* source/obj3/lib/bt.lsp:
+	* source/obj3/lib/filecol.lsp:
+	* source/obj3/lib/function.lsp:
+	* source/obj3/lib/gctrace.lsp:
+	* source/obj3/lib/hash.lsp:
+	* source/obj3/lib/obless.lsp:
+	* source/obj3/lib/sigs.lsp:
+	* source/obj3/lib/type-of-safe.lsp:
+	General cleanup, CMU support complete (but slow), and CLISP support
+	improving.
+
+	* source/obj3/Makefile:
+	Added cleanup of compiled files from CMU on x86 and CLISP.
+
+2003-09-23  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/obj3/obj3-quick-compile.sh: Chucking old files.
+
+	* Makefile: 2.09/TRIM/CMU+GCL version.
+
+	* source/trim/docs/trim-intro.ps:
+	* source/trim/examples/FIB.eq:
+	* source/trim/examples/FIB.trm:
+	* source/trim/examples/INT.eq:
+	* source/trim/src/Makefile:
+	* source/trim/src/README:
+	* source/trim/src/asm.hxx:
+	* source/trim/src/asmlists.cxx:
+	* source/trim/src/asmlists.hxx:
+	* source/trim/src/basics.cxx:
+	* source/trim/src/basics.hxx:
+	* source/trim/src/config.h:
+	* source/trim/src/config.hxx:
+	* source/trim/src/const.hxx:
+	* source/trim/src/eqcomp.cxx:
+	* source/trim/src/eqcomp.hxx:
+	* source/trim/src/eqgram.y:
+	* source/trim/src/eqscan.l:
+	* source/trim/src/fileio.c:
+	* source/trim/src/fileio.h:
+	* source/trim/src/mem.cxx:
+	* source/trim/src/obstack.c:
+	* source/trim/src/obstack.h:
+	* source/trim/src/opt.cxx:
+	* source/trim/src/opt.hxx:
+	* source/trim/src/trim.cxx:
+	* source/trim/src/trim.hxx:
+	* source/trim/src/trim_instr.imp:
+	* source/trim/src/trimasm.cxx:
+	* source/trim/src/trimcc.c:
+	* source/trim/src/trimcc.h:
+	* source/trim/src/trimgram.y:
+	* source/trim/src/trimmain.cxx:
+	* source/trim/src/trimopt.cxx:
+	* source/trim/src/trimscan.l:
+	* source/trim/src/util.hxx:
+	TRIM implementation from Lutz Hamel.
+
+	* source/obj3/Makefile: Initial updates for 2.09 (GCL+CMU) release.
+
+	* source/obj3/obj3-compile.sh, source/obj3/obj3-load.sh:
+	Initial updates for 2.09 (GCL+CMU) release.  Compilation with
+	optimization completes with GCL 2.5.3 and CMU 18e, but the resulting
+	CMU image is terrifically slow.  GCL is the way to go right now until
+	the CMU compilation process is debugged.
+
+	* source/obj3/obj3-config.sh:
+	* source/obj3/obj3-make.sh:
+	* source/obj3/obj3.sh:
+	Initial updates for 2.09 (GCL+CMU) release.
+
+	* source/obj3/top/misc.lsp:
+	* source/obj3/top/module_parse.lsp:
+	* source/obj3/top/print.lsp:
+	* source/obj3/top/top.lsp:
+	* source/obj3/top/apply.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.  TRIM integration work
+	completed by Lutz Hamel.
+
+	* source/obj3/modexp/modexp.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.  Documentation cleanup.
+	Eliminated make_symb and concat_string and inlined their definitions
+	in defrepr to avoid a CMU compiler bug.  Also, made use of defrepr now
+	for both CMU and GCL compilers.  Old defuns are still there, but
+	commented out universally, but for functions that didn't have defrepr
+	versions.
+
+	* source/obj3/match/ac.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.  Documentation cleanup as
+	well.
+
+	* source/obj3/lib/filecol.lsp:
+	* source/obj3/lib/gctrace.lsp:
+	* source/obj3/lib/hash.lsp:
+	* source/obj3/lib/obless.lsp:
+	* source/obj3/lib/sigs.lsp:
+	* source/obj3/lib/type-of-safe.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.  Foreign-function cleanup
+	for dual CMU/GCL support.
+
+	* source/obj3/lib/addr.lsp:
+	* source/obj3/lib/alt.lsp:
+	* source/obj3/lib/bt.lsp:
+	* source/obj3/lib/function.lsp:
+	* source/obj3/lib/macros.lsp:
+	* source/obj3/lib/topo_sort.lsp:
+	* source/obj3/match/match.lsp:
+	* source/obj3/match/match_methods.lsp:
+	* source/obj3/match/match_system.lsp:
+	* source/obj3/match/state.lsp:
+	* source/obj3/match/system.lsp:
+	* source/obj3/match/theory.lsp:
+	* source/obj3/match/theory_name.lsp:
+	* source/obj3/match/theory_state.lsp:
+	* source/obj3/match/z.lsp:
+	* source/obj3/match/c.lsp:
+	* source/obj3/match/cz.lsp:
+	* source/obj3/match/empty.lsp:
+	* source/obj3/match/environment.lsp:
+	* source/obj3/match/global_state.lsp:
+	* source/obj3/match/match_equation.lsp:
+	* source/obj3/match/a.lsp:
+	* source/obj3/match/acz.lsp:
+	* source/obj3/match/az.lsp:
+	* source/obj3/modexp/mapping.lsp:
+	* source/obj3/modexp/modexp_eval2.lsp:
+	* source/obj3/modexp/modexp_eval.lsp:
+	* source/obj3/modexp/modexp_parse.lsp:
+	* source/obj3/top/ci.lsp:
+	* source/obj3/top/module_basic.lsp:
+	* source/obj3/top/module_eval.lsp:
+	* source/obj3/top/module.lsp:
+	* source/obj3/top/module_other.lsp:
+	* source/obj3/top/patch.lsp:
+	* source/obj3/top/reader.lsp:
+	* source/obj3/top/saver.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.
+
+	* source/obj3/basic/term_print.lsp:
+	TRIM integration from Lutz Hamel.  Initial updates for 2.09 (GCL+CMU)
+	release.
+
+	* source/obj3/parser/parse_aux.lsp:
+	* source/obj3/parser/parse_dict.lsp:
+	* source/obj3/parser/parser.lsp:
+	* source/obj3/prelude/prelude.lsp:
+	* source/obj3/prelude/obj3sp.lsp:
+	* source/obj3/tools/tools.lsp:
+	* source/obj3/tools/obj_trace.lsp:
+	* source/obj3/tools/obj_print.lsp:
+	* source/obj3/tools/fns.lsp:
+	* source/obj3/rew/substitution.lsp:
+	* source/obj3/rew/rule_ring.lsp:
+	* source/obj3/rew/rule.lsp:
+	* source/obj3/rew/rew.lsp:
+	* source/obj3/rew/memo_rew.lsp:
+	* source/obj3/rule_gen/ext_rule_gen.lsp:
+	* source/obj3/rule_gen/proof.lsp:
+	* source/obj3/basic/variable.lsp:
+	* source/obj3/basic/utilities.lsp:
+	* source/obj3/basic/term.lsp:
+	* source/obj3/basic/sort_order.lsp:
+	* source/obj3/basic/sort.lsp:
+	* source/obj3/basic/sort_constraint.lsp:
+	* source/obj3/basic/optables.lsp:
+	* source/obj3/basic/opinf.lsp:
+	* source/obj3/basic/operator.lsp:
+	Initial updates for 2.09 (GCL+CMU) release.
+
+	* source/obj3/obj3-lisp-dir.lsp:
+	Updated for current Nijmegen working environment.
+
+	* source/obj3/obj3-files.lsp:
+	Reordered files to be more dependency-based.
+
+	* source/examples/proofs/propc.obj: kobj -> obj
+
+	* docs/Makefile:
+	* source/examples/README.txt:
+	* docs/obj_bib.html:
+	* source/README.html:
+	* docs/index.html:
+	* VERSION:
+	* BUGS.html:
+	* FAQ.html:
+	* LICENSE.html:
+	* README.html:
+	* RELEASE_NOTES.html:
+	* TODO.html:
+	* index.html:
+	Initial updates for 2.09 (GCL+CMU) release.
+
+2001-12-02  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* BUGS.html: Added TRIM information.
+
+2000-06-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/obj_bib.html: Fixed bib reference.
+
+	* source/obj3/prelude/obj3sp.obj:
+	* source/obj3/basic/operator.lsp:
+	* source/obj3/basic/opinf.lsp:
+	* source/obj3/basic/optables.lsp:
+	* source/obj3/basic/sort.lsp:
+	* source/obj3/basic/sort_constraint.lsp:
+	* source/obj3/basic/sort_order.lsp:
+	* source/obj3/basic/term.lsp:
+	* source/obj3/basic/term_print.lsp:
+	* source/obj3/basic/utilities.lsp:
+	* source/obj3/basic/variable.lsp:
+	* source/obj3/lib/addr.lsp:
+	* source/obj3/lib/alt.lsp:
+	* source/obj3/lib/bt.lsp:
+	* source/obj3/lib/filecol.lsp:
+	* source/obj3/lib/function.lsp:
+	* source/obj3/lib/gctrace.lsp:
+	* source/obj3/lib/hash.lsp:
+	* source/obj3/lib/macros.lsp:
+	* source/obj3/lib/obless.lsp:
+	* source/obj3/lib/sigs.lsp:
+	* source/obj3/lib/topo_sort.lsp:
+	* source/obj3/lib/type-of-safe.lsp:
+	* source/obj3/match/a.lsp:
+	* source/obj3/match/ac.lsp:
+	* source/obj3/match/acz.lsp:
+	* source/obj3/match/az.lsp:
+	* source/obj3/match/c.lsp:
+	* source/obj3/match/cz.lsp:
+	* source/obj3/match/empty.lsp:
+	* source/obj3/match/environment.lsp:
+	* source/obj3/match/global_state.lsp:
+	* source/obj3/match/match.lsp:
+	* source/obj3/match/match_equation.lsp:
+	* source/obj3/match/match_methods.lsp:
+	* source/obj3/match/match_system.lsp:
+	* source/obj3/match/state.lsp:
+	* source/obj3/match/system.lsp:
+	* source/obj3/match/theory.lsp:
+	* source/obj3/match/theory_name.lsp:
+	* source/obj3/match/theory_state.lsp:
+	* source/obj3/match/z.lsp:
+	* source/obj3/modexp/mapping.lsp:
+	* source/obj3/modexp/modexp.lsp:
+	* source/obj3/modexp/modexp_eval.lsp:
+	* source/obj3/modexp/modexp_eval2.lsp:
+	* source/obj3/modexp/modexp_parse.lsp:
+	* source/obj3/parser/parse_aux.lsp:
+	* source/obj3/parser/parse_dict.lsp:
+	* source/obj3/parser/parser.lsp:
+	* source/obj3/prelude/obj3sp.lsp:
+	* source/obj3/prelude/prelude.lsp:
+	* source/obj3/rew/memo_rew.lsp:
+	* source/obj3/rew/rew.lsp:
+	* source/obj3/rew/rule.lsp:
+	* source/obj3/rew/rule_ring.lsp:
+	* source/obj3/rew/substitution.lsp:
+	* source/obj3/rule_gen/ext_rule_gen.lsp:
+	* source/obj3/rule_gen/proof.lsp:
+	* source/obj3/tools/fns.lsp:
+	* source/obj3/tools/obj_print.lsp:
+	* source/obj3/tools/obj_trace.lsp:
+	* source/obj3/tools/tools.lsp:
+	* source/obj3/top/apply.lsp:
+	* source/obj3/top/ci.lsp:
+	* source/obj3/top/misc.lsp:
+	* source/obj3/top/module.lsp:
+	* source/obj3/top/module_basic.lsp:
+	* source/obj3/top/module_eval.lsp:
+	* source/obj3/top/module_other.lsp:
+	* source/obj3/top/module_parse.lsp:
+	* source/obj3/top/patch.lsp:
+	* source/obj3/top/print.lsp:
+	* source/obj3/top/reader.lsp:
+	* source/obj3/top/saver.lsp:
+	* source/obj3/top/top.lsp:
+	* source/obj3/Makefile:
+	* source/obj3/obj3-compile.sh:
+	* source/obj3/obj3-config.sh:
+	* source/obj3/obj3-files.lsp:
+	* source/obj3/obj3-lisp-dir.lsp:
+	* source/obj3/obj3-load.sh:
+	* source/obj3/obj3-make.sh:
+	* source/obj3/obj3.sh:
+	* source/examples/README.txt:
+	* source/README.html:
+	* docs/Built-Ins.tex:
+	* docs/Makefile:
+	* docs/NewFeatures.tex:
+	* docs/index.html:
+	* docs/obj_bib.html:
+	* ChangeLog:
+	* FAQ.html:
+	* LICENSE.html:
+	* Makefile:
+	* README.html:
+	* RELEASE_NOTES.html:
+	* TODO.html:
+	* index.html:
+	* BUGS.html:
+	2.06 release.
+
+	* VERSION: New file.
+
+2000-06-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Release - Decided that primary release should only contain
+	source and no binaries.  Build separate download for architecture
+	binaries.  First release will be for Linux 2.2 on ix86.
+
+	* Documentation - Integrated suggested changes from Joseph Goguen
+	from email of May 23, 2000.
+
+2000-05-21  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Clarity - Renamed "Top" to "Index" for clarity after external
+	review.
+
+	* BibRefs - Corrected a few URLs that referred to Bib entries.
+
+	* Examples - Tweaked iobj.obj and tp.obj so that they would run in
+	place.  tp still isn't a complete unit, but each chapter is
+	correct independently.
+
+	* ReleaseBuild - Put BSD license on all major files per
+	discussions with Joseph Goguen.  Did final updates to
+	documentation and source and prepared for release.
+	
+2000-01-23  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* ReleaseBuild - Put whole new tree in order with version control
+	files in place.  Noticed that no test code was included with 2.04
+	release. 
+
+2000-01-17  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* ReleaseBuild - Began constructing new release per Goguen's
+	suggestions.  Release is a complete rebuild of 2.04.
+
+1994-02-25  Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_204.5 - Add warning message when equations with LHS a
+	built-in constant are added.  This is needed because the
+	interpreter won't apply such equations as the (default) strategy
+	it will pick up for the sort$constructor will be null.
+
+1994-01-21  Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_204.4 - Modify numeric built-in's so that they won't
+	crash if operators are invoked on other built-in sorts introduced
+	as sub-sorts.
+
+1994-01-21 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_204.4 - Modify numeric built-in's so that they won't
+	crash if operators are invoked on other built-in sorts introduced
+	as sub-sorts.
+	
+1993-12-06 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_204.3 - Appended documentation of earlier un-logged
+	updates to the end of this file.
+
+1993-12-06 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_204.3 - Appended documentation of earlier un-logged
+	updates to the end of this file. 
+
+1993-10-19  Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision_1.2 - Partial fix to bug in computation of appropriate
+	least'' overloadings for polymorphic built-in's (e.g. _==_).  The
+	system no longer crashes if an overloading couldn't be guessed,
+	and uses and arbitrary common super-sort of the arguments.  The
+	(broken) older code attempted to find a common top sort.  This is
+	slooooow and even worse since *smallest* sorts are what is needed.
+
+1993-10-19 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* Revision 1.1 - Initial revision in RCS for Andrew Stevens.
+
+1993-05-16 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* ReleaseBuild - Version-2.04.
+
+	* top/reader.lsp -  Hook to allow quoting of input symbols
+	obj_QUOTESYM$keyword (2OBJ uses (setq
+	obj_QUOTESYM$keyword "#$") ) 
+
+	* top/*.lsp basic/operator.lsp - Added hooks for development of
+	alternate print-forms handling code.  Print-forms to be to be
+	specified as operator attribute.  New field in operator record is
+	used to record them.
+
+	* *obj$altform_hook* - is invoked on raw attributes token SEXP to
+	produce contents of new alternate_print_forms field of operator
+	structure
+
+	* top/module.lsp - Added extra field to module structures
+	assoc_objs to hold objects associated with a given module.
+	(Intended to be used by 2OBJ for storting partial proofs)
+
+1993-05-16 Andrew Stevens <Andrew.Stevens@comlab.ox.ac.uk>
+
+	* ReleaseBuild - Version-2.03.
+	
+	* Top-Level - Hooks for top-level command start and end:
+	(defvar *obj$precmd_hook* nil)
+	(defvar *obj$postcmd_hook* nil)
+
+	Adolfo's null signature renaming bug fix.
+
+	* top/top.lsp - input/in directive now takes rest of line as
+	filename not next symbol (fixes problems with pathnames
+	including _ etc) 

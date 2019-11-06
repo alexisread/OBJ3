@@ -1,0 +1,20 @@
+in list
+
+th POSET is
+  sort Elt .
+  op _<_ : Elt Elt -> Bool .
+  vars E1 E2 E3 : Elt .
+  eq E1 < E1 = false .
+  cq E1 < E3 = true if E1 < E2 and E2 < E3 .
+endth
+
+obj LEXL[X :: POSET] is
+  protecting LIST[X] .
+  op _<<_ : List List -> Bool .
+  vars L L' : List .
+  vars E E' : Elt .
+  eq L << nil = false .
+  eq nil << E L = true .
+  eq E L << E L' = L << L' .
+  cq E L << E' L' = E < E' if E =/= E' .
+endo

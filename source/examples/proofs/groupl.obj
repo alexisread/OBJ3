@@ -1,0 +1,53 @@
+th GROUPL is
+  sort Elt .
+  op _*_ : Elt Elt -> Elt .
+  op e : -> Elt .
+  op _-1 : Elt -> Elt [prec 2] .
+  var A B C : Elt .
+  [lid] eq e * A = A .
+  [lnv] eq A -1 * A = e .
+  [las] eq A * (B * C) = (A * B) * C .
+endth
+
+open .
+op a : -> Elt .
+
+*** first, prove the right inverse law:
+start a * a -1 .
+ ***> [0] (a * a -1)
+apply -.lid at that .
+ ***> [1] e * (a * a -1)
+apply -.lnv with A = (a -1) within that .
+ ***> [2] ((a -1) -1 * a -1) * (a * a -1)
+apply .las at that .
+ ***> [3] ((a -1 -1 * a -1)* a)* a -1
+apply -.las with A = (a -1 -1) within that .
+ ***> [4] ((a -1 -1 * (a -1 * a)) * a -1
+apply .lnv within that .
+ ***> [5] (a -1 -1 * e) * a -1
+apply -.las at that .
+ ***> [6] a -1 -1 * (e * a -1)
+apply .lid within that .
+ ***> [7] a -1 -1 * a -1
+apply .lnv at that .
+ ***> [8] e
+
+*** we can now add the proven equation
+ [rnv] eq (A * (A -1)) = e .
+
+*** next, we prove the right identity law:
+start a * e .
+ ***> [0] a * e
+apply -.lnv with A = a within that .
+ ***> [1] a *(a -1 * a)
+apply .las at that .
+ ***> [2] (a * a -1)* a
+apply .rnv within that .
+ ***> [3] e * a
+apply .lid at that .
+ ***> [4] a
+
+***> we can add the proven equation
+ [rid] eq A * e = A .
+
+close

@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- $Id: README.html,v 206.2 2003/09/29 15:10:24 kiniry Exp $ -->
+
+<!--
+ OBJ3 2.06,2.08,2.09 Copyright (c) 2000-2003 Joseph Kiniry, Joseph Goguen
+ OBJ3 2.05 Copyright (c) 2000 Sula Ma, Joseph Kiniry, Joseph Goguen
+ OBJ3 2.04 Copyright (c) 1988,1991,1993 SRI International
+ TRIM Copyright (c) 1994,2001 Lutz Hamel
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>README for OBJ3 version 2.09 Source Tree</title>
+<link rel="stylesheet" type="text/css" href="../docs/base.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="OBJ3" />
+<meta name="description" content="" />
+</head>
+
+<body>
+<h1 align="center">README for OBJ3 2.09 Source Tree</h1>
+
+<hr />
+<!-- ============================================================ -->
+
+<p> Welcome to the OBJ3 source tree. </p>
+
+<h2>Source Structure</h2>
+
+<p> The source code for the OBJ3 system is found in the <a
+href="obj3/">obj3</a> directory.  In particular, note that the standard
+OBJ3 prelude is included as <a
+href="obj3/prelude/obj3sp.obj">obj3/prelude/obj3sp.obj</a>. </p>
+
+<p> The source code for the TRIM system is found in the <a
+href="trim/">trim</a> directory.  The TRIM example code and documentation
+are found there as well. </p>
+
+<p> <strong>Many</strong> OBJ3 examples are included in the <a
+href="examples/">examples</a> directory.  See the <a
+href="examples/README.txt">README</a> there for more information. </p> 
+
+<p> A few miscellaneous support programs (coded in C) are available in 
+the <a href="support/">support</a> directory. </p>
+
+<h2>Building</h2>
+
+<h3>Background</h3>
+
+<p> The OBJ3 system is written in Common Lisp. Modern Common Lisp
+systems can compile Lisp code to C, thus a compiled implementation of
+OBJ3 is quite efficient. </p>
+
+<p> The last major release of OBJ3 (2.0) took place in April of 1992
+and was built by Timothy Winkler, one of the primary OBJ3 developers.
+At that time, OBJ3 built properly on several Common Lisp
+implementations including: </p>
+
+<ul>
+
+  <li> <em>CMU CL</em> - Carnegie Mellon's Common Lisp's last major
+      release (17) from CMU took place in November, 1994.  CMU-CL is
+      currently under development by a group of interested individuals 
+      and the latest version (18e) was made available in 2003.  See <a
+      href="http://www.cons.org/cmucl/">CMU Common Lisp Activities
+      Page</a> for more information.
+  </li>
+      
+  <li> <em>LUCID CL</em> (now <em>Liquid CL</em> from what used to be
+      known as Harlequin, but now seems to be called Xanalys) - A
+      commercial Common Lisp implementation that is still sold and
+      supported. The latest version at the time of this writing is
+      unknown, and it is unclear if this is still a supported product.
+      Xanalys also provides something called "LispWorks Personal
+      Edition"; we do not know how this relates to Lucid CL, nor have
+      we tried to use it for OBJ3.
+  </li>
+      
+  <li> <em>Kyoto Common Lisp (KCL)</em> - Was the primary Lisp
+      platform for OBJ3 development in the early 90s.  KCL is a highly 
+      portable implementation of Common Lisp.  KCL evolved into AKCL
+      (Austin Kyoto Common Lisp) by Bill Schelter, which then evolved
+      into GNU Common Lisp.  A release of AKCL is available from <a
+      href="http://www.cs.cmu.edu/afs/cs/user/mkant/Public/Lisp/impl/kcl/akcl/">CMU</a>
+      but it is circa 1992.  It is unclear how portable or supported
+      AKCL is at this time.
+  </li>
+</ul>
+
+<p> The world of Common Lisp implementations has changed over the last
+eight years.  The primary free implementation that is widely used and
+available today is GNU Common Lisp.  <em>This release of OBJ3 is only
+guaranteed to run under GNU CL (GCL) and CMU Common Lisp.</em> You can
+obtain GCL via the the <a
+href="http://www.gnu.org/software/gcl/gcl.html">GCL home page</a>; CMU
+Common Lisp is available via the <a
+href="http://www.cons.org/cmucl/">Cons.org</a> website.  Linux users
+can obtain references to various RPMs for GCL via <a
+href="http://www.rpmfind.net/linux/RPM/gcl.html">RPMfind.net's</a>
+excellent auto-index. </p>
+
+<p> We are currently finishing a "port" of OBJ3 version 2 to CLISP
+2.31. </p>
+
+<p> Thanks go primarily to <a href="mailto:sm@comlab.ox.ac.uk">Sula Ma</a>
+at Oxford for the OBJ3 2.04 port to GCL 2.2.2. </p>
+
+<p> We are interested in hearing if anyone ports OBJ3 to other Common
+Lisp implementations, in particular, LispWorks and <a
+href="http://www.franz.com/">Franz Allegro CL</a>. </p>
+
+<p> For a good breakdown of modern Common Lisp implementations, see <a
+href="http://www.elwoodcorp.com/alu/table/systems.htm">this
+informative page</a>. All other questions about Common Lisp
+implementation are probably addressed in the <a
+href="http://www.faqs.org/faqs/lisp-faq/part1/preamble.html">Lisp
+FAQ</a>. </p>
+
+<h3>Building</h3>
+
+<p> To build OBJ3, you need GCL or CMU CL and GNU make.  Set the shell
+variable 'lisp_compiler' to the executable of the CL compiler you wish
+to use, then type "make" in the OBJ3 root directory.  After the build
+completes, the OBJ3 and TRIM executables will be found in the bin
+directory. </p>
+
+<h2>Questions or comments?</h2>
+
+<p> Please email <a
+href="mailto:obj-feedback@kindsoftware.com">obj-feedback@kindsoftware.com</a>. </p>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="../index.html"> Index </a> ]
+[ <a href="../README.html"> Readme </a> ]
+[ <a href="../FAQ.html"> FAQ </a> ] 
+[ <a href="../RELEASE_NOTES.html"> Release Notes </a> ] 
+[ <a href="../TODO.html"> To-Do List </a> ]
+[ <a href="../BUGS.html"> Bug List </a> ] 
+[ <a href="../docs/index.html"> Papers </a> ]
+[ Source ] 
+[ <a href="../docs/obj_bib.html"> Bibliography </a> ]
+[ <a href="../LICENSE.html"> License </a> ] </p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="../docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="../docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="../docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Mon Sep 29 17:09:19 CEST 2003
+<!-- hhmts end -->
+</body>
+</html>

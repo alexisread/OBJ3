@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- $Id: BUGS.html,v 206.3 2003/09/29 12:46:38 kiniry Exp $ -->
+
+<!--
+ OBJ3 2.06,2.08,2.09 Copyright (c) 2000-2003 Joseph Kiniry, Joseph Goguen
+ OBJ3 2.05 Copyright (c) 2000 Sula Ma, Joseph Kiniry, Joseph Goguen
+ OBJ3 2.04 Copyright (c) 1988,1991,1993 SRI International
+ TRIM Copyright (c) 1994,2001 Lutz Hamel
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OBJ3 version 2.09 Bug List</title>
+<link rel="stylesheet" type="text/css" href="docs/base.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="OBJ3" />
+<meta name="description" content="" />
+</head>
+
+<body>
+<h1 align="center">OBJ3 Bug List</h1>
+
+<hr />
+<!-- ============================================================ -->
+
+<p> This document is a summary of all known bugs in this version of OBJ3.
+To report a new bug, please send an email to <a
+href="mailto:obj3-bugs@kindsoftware.com">obj3-bugs@kindsoftware.com</a>
+</p>
+
+<h2>OBJ3 2.09 [RedHat 8/glibc-2.3.2-4.80.6] (GCL+CMU)</h2>
+
+<p> No known bugs. </p>
+
+<h2>OBJ3 2.08 (TRIM)</h2>
+
+<p> While not a bug per se, it is important to note that the TRIM compiler
+has several limitations.  In general, it cannot be used on arbitrary OBJ3
+code because it does not support the following OBJ3 features: built-ins,
+A/C rewriting, evaluation strategies, and non-left-linear equations.  Even
+so, the speed increase afforded by TRIM is quite welcome for evaluations of
+high computational complexity. See the TRIM paper included with the
+distribution for more information. </p>
+
+<h2>OBJ3 2.04</h2>
+
+<dl>
+  <dt> in(put) cannot accept filenames with a '_' in them. </dt>
+  <dd> noted: ?, fixed: 1993-04-07 by A. Stevens </dd>
+
+      <p>
+      No details available.
+      </p>
+      
+  <dt> Module processing crash. </dt>
+  <dd> noted: 20/4/93, fixed: ?
+      <p>
+      Description: If an attempt is made to instantiate a
+      parameterized module with complete garbage, especially if
+      insufficient parameters are given, the system drops out with a
+      LISP exception.  Missing error check someplace?
+      </p>
+
+      <p>
+      No fix currently available.
+      </p>
+      </dd>
+
+  <dt> Parser Limitations not commented on. </dt>
+  <dd> noted: 1993-04-20, fixed: ?
+      <p>
+      The parser is unable to handle operator syntax involving
+      brackets.  For example,
+      </p>
+      <pre class="OBJ3">
+op (.All _ ) _ : ...
+      </pre>
+      <p>
+      However, operator <em>declarations</em> of this form are
+      silently accepted.
+      </p>
+
+      <p>
+      No fix currently available.
+      </p>
+      </dd>
+
+  <dt> Problems with comm assoc matcher. </dt>
+  <dd> noted: 1993/03/18, fixed: ?
+      <p>
+      Summary.  For example,
+      </p>
+      <pre class="OBJ3">
+obj MATCH is
+  sorts S1 S2 .
+  subsort S2 < s1 .
+  op _+_ : S1 S1 -> S1 [assoc] .
+  op _+_ : S2 S2 -> S2 [assoc comm] .
+  op a   : -> S2 .
+  op b   : -> S2 .
+  op c   : -> S1 .
+  op _*_ : S1 S1 -> S1 .
+
+  var x : S1 .
+  eq x * x = x .
+endo
+
+red (a + b)*(b + a).  ***> should be: a + b
+
+red ((a + b) + c)*((b + a)+ c).  ***> should be: a + b + c
+      </pre>
+      </dd>
+
+  <dt> Problem with comm assoc id matcher. </dt>
+  <dd> noted: 1993/04/28, fixed: ?
+      <p>
+      If you open . a module instantiated with a module introducing an
+      operator needing matching acz matching, attempting to use the
+      operator causes a segmentation fault.  Running within the
+      interpreter gives a more informative response.
+      </p>
+  </dd>
+
+  <dt> From original obj3/lisp/basic/counter.txt (unconfirmed claim): </dt>
+  <dd>
+      <pre>
+Joseph,
+
+I think I may have found a bit of a bug in the current lecture notes.
+In section 5.5 you claim that if a Sigma term-rewriting system A with
+no void sorts is confluent then so is A with fresh constant (i.e. A
+treated as a Sigma U X term-rewriting system).
+
+
+Here's what seems to be a counter-example to this claim.
+Consider
+
+obj A is
+sort Nat .
+vars X Y Z : Nat .
+
+op 0 : -> Nat
+op s : Nat -> Nat .
+op _+_ : Nat Nat -> Nat .
+op t : Nat Nat Nat -> Nat .
+
+eq 0 + X = X .
+eq s(X) + Y = s(X + Y) .
+eq X+(Y+Z) = t(X,Y,Z) .
+eq t(s(X),Y,Z) = s(X + (Y+Z)) .
+eq t(0,Y,Z) = Y + Z .
+endo
+
+Termination is pretty trivial: e.g.
+
+p(0) = 2
+p(s(a)) = 1 + p(a)
+p(a+b) = 4 + p(a)p(b)
+p(t(a,b,c)) = 2 + p(a)(4 + p(b)p(c))
+
+We now prove A is confluent.  Let a,b,c,d,e etc denote A-terms
+
+There are two critical pairs:
+
+ a + (b + (c + d)) 1=> a + t(b,c,d)	(i)
+                   1=> t(a,b, c + d)
+
+ and
+ a + (s(b) + c)   1=> t(a,s(b),c)       (ii)
+                  1=> a+s(b+c) 		   
+
+Now, it is easy to see that for any term t we either have
+
+ t *=> s(t') or  a *=> 0
+
+ (Simply rewrite using an most-nested-first ``layered'' rewriting strategy.
+ I.e. alternately rewrite most-nested +'s, then most-nested t's)
+ 
+
+Thus we can easiy show that a + t(b,c,d) and  t(a,b, c + d) are
+both rewriteable to one of
+
+ s(a' + s(b' + (c + d))) or s(b' + (c + d)) or s(a' + (c  + d))
+ or (c + d)
+
+depending on which of the two cases above hold for a and b .
+
+Similarly, we can easily show  t(a,s(b),c) and 1=> a+s(b+c) are
+both rewriteable to one of
+
+ s(a',s(b+c)) or s(b + c) 
+  
+depending on which of the two cases above holds for a.
+Hence A is locally confluent and hence confluent.
+
+
+Now  let  X = { a,b,c,d } and consider A as a Sigma^{A} U X
+term-rewriting system.
+
+
+Adding a,b,c,d as fresh constants we obtain
+
+  a + (b + (c + d))) 1=> t(a,b, c + d)
+                     1=> a + t(b,c,d)
+
+with both alternate rewritings normal forms. Hence A treated
+as Sigma^{A} U X term-rewriting system is NOT confluent.
+
+Andrew
+      </pre>
+</dd>
+</dl>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="index.html"> Index </a> ]
+[ <a href="README.html"> Readme </a> ]
+[ <a href="FAQ.html"> FAQ </a> ] 
+[ <a href="RELEASE_NOTES.html"> Release Notes </a> ] 
+[ <a href="TODO.html"> To-Do List </a> ]
+[ Bug List ] 
+[ <a href="source/README.html"> Source </a> ] 
+[ <a href="docs/index.html"> Papers </a> ] 
+[ <a href="docs/obj_bib.html"> Bibliography </a> ]
+[ <a href="LICENSE.html"> License </a> ] </p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Mon Sep 29 12:07:32 CEST 2003
+<!-- hhmts end -->
+</body>
+</html>
